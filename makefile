@@ -1,11 +1,16 @@
 CC=gcc
 CFLAGS=-ansi -Wall -pedantic -O2
-PATH=bin
+BIN=bin
+
 RM=rm -f
 
-conexidade: main.o
-	$(CC) $^ -o $(PATH)/$@
+conectivity: main.o
+	$(CC) $^ -o $(BIN)/$@
 	@ $(RM) *.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c $^
+
+.PHONY: GDB
+GDB: main.o
+	$(CC) $(CFLAGS) -g $^ -o $@
