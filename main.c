@@ -18,8 +18,9 @@ int main(int argc, char **argv)
             printf("%s ", argv[i]);
         printf("\n");
         
-        printf("opt: %c\n", opt);
-        printf("arg: %s\n", optarg);
+        printf("option: %c\n", opt);
+        printf("optarg: %s\n", optarg);
+        printf("optopt: %c\n", optopt);
     }
     
     return 0;
