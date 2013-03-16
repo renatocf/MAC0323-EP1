@@ -21,6 +21,7 @@ int main(int argc, char **argv)
         printf("option: %c\n", opt);
         printf("optarg: %s\n", optarg);
         printf("optopt: %c\n", optopt);
+        printf("optind: %d\n", optind);
     }
     
     return 0;
