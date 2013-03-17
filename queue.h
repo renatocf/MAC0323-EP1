@@ -1,12 +1,13 @@
 #include "Item.h"
 
-/* Define a estrutura de fila 'Queue' */
+/* Define os nódulso da fila e os links para eles */
 typedef struct node *Link;
-struct node {
+typedef struct node {
     Item item;
     Link next;
-};
-typedef struct node Node;
+} Node;
+
+/* Define a estrutura de fila 'Queue' */
 struct queue {
     Link init;
     Link end;
