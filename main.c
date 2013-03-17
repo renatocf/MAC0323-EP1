@@ -2,7 +2,6 @@
 #include<stdlib.h>
 
 #include "getopt.h"
-#include "queue-internal.h"
 #include "queue.h"
 
 typedef struct options {
@@ -43,9 +42,8 @@ int receive_arguments(int argc, char **argv, Options *args);
 int main(int argc, char **argv)
 {
     /** VARIÁVEIS *****************************************************/
-        Queue teste, teste2, teste3;
         int result;
-        int i, j; Link aux;
+        int i;
         
         /* Struct com argumentos da linha de comando */
         Options args = { 0, 0, 0, 314159265, 0, 0 }; 
@@ -65,60 +63,6 @@ int main(int argc, char **argv)
             printf("\n%s%s\n", error, usage);
             return EXIT_FAILURE;
         }
-    
-    teste = queueInit();
-    teste2 = queueInit();
-    teste3 = queueInit();
-    
-    if(teste == NULL) printf("teste NULL\n");
-    else printf("teste NOT NULL\n");
-    for(i = 0; i < args.N; i++) {
-        queuePut(teste, i);
-        queuePut(teste2, i+args.N);
-        queuePut(teste3, i+2*args.N);
-    }
-    if(teste->init == NULL) printf("NULL init\n");
-    
-    /* aux = teste->init; if(aux->next != NULL) printf("ops"); */
-    /* else printf("no ops"); */
-    
-    /* Percorre a fila (final para começo) */
-    for(aux = teste->end; aux != NULL; aux = aux->next)
-        printf("%d ", aux->item);
-    printf("\n");
-    for(aux = teste2->end; aux != NULL; aux = aux->next)
-        printf("%d ", aux->item);
-    printf("\n");
-    for(aux = teste3->end; aux != NULL; aux = aux->next)
-        printf("%d ", aux->item);
-    printf("\n");
-    /* for(aux = teste2->end; aux != NULL; aux = aux->next) */
-    /*     printf("%d ", aux->item); */
-    /* printf("\n"); */
-    
-    /* for(i = 0; i < 10; i++) */
-    /* { */
-    /*     j = queueGet(teste); */
-    /*     #<{(| printf("%d\n", j); |)}># */
-    /*     for(aux = teste->end; aux != NULL; aux = aux->next) */
-    /*         printf("%d ", aux->item); */
-    /*     printf("\n"); */
-    /* } */
-    if(teste->init->next == NULL) printf("NULL init next\n");
-    
-    queueFree(teste);
-    /* while(!queueEmpty(teste)) */
-    /* { */
-    /*     aux = teste->end; */
-    /*     teste->end = aux->next; */
-    /*     for(aux = teste->end; aux != NULL; aux = aux->next) */
-    /*         printf("%d ", aux->item); */
-    /*     printf("\n"); */
-    /* }  */
-    if(queueEmpty(teste)) printf("queue empty\n");
-    else printf("queue not empty\n");
-    for(aux = teste->end; aux != NULL; aux = aux->next)
-        printf("%d ", aux->item);
     
     for(i = 0; i < argc; i++)
         printf("%s ", argv[i]);
