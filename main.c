@@ -3,6 +3,7 @@
 
 #include "getopt.h"
 #include "queue.h"
+#include "Point.h"
 
 typedef struct options {
     int N;   /* Número de pontos */
@@ -42,15 +43,16 @@ int receive_arguments(int argc, char **argv, Options *args);
 int main(int argc, char **argv)
 {
     /** VARIÁVEIS *****************************************************/
-        int result;
+        point a;
+        int func_err;
         int i;
         
         /* Struct com argumentos da linha de comando */
         Options args = { 0, 0, 0, 314159265, 0, 0 }; 
 
     /** ARGUMENTOS ****************************************************/
-        result = receive_arguments(argc, argv, &args);
-        if(result == EXIT_FAILURE) return EXIT_FAILURE;
+        func_err = receive_arguments(argc, argv, &args);
+        if(func_err) return EXIT_FAILURE;
         
         if(args.h == 1)
         {
@@ -63,6 +65,11 @@ int main(int argc, char **argv)
             printf("\n%s%s\n", error, usage);
             return EXIT_FAILURE;
         }
+    
+    /** PONTOS ALEATÓRIOS *********************************************/
+        set_seed(args.s);
+        a = r_point();
+        printf("%f %f", a.x, a.y);
     
     for(i = 0; i < argc; i++)
         printf("%s ", argv[i]);
