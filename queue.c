@@ -21,13 +21,20 @@
 
 /* Cria um buffer para ser usado pela biblioteca */
 static Queue buffer;
-static int buf_size = BUF_INIT_SIZE;
+static int buf_size = BUF_INIT_SIZE/2;
 
 static void createBuffer();
 static Link getBufferNode();
 static void returnToBuffer(Link node);
 static void resizeBuffer();
 
+/*
+////////////////////////////////////////////////////////////////////////
+-----------------------------------------------------------------------
+                        FUNÇÕES DE USO EXTERNO   
+-----------------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/
 Queue queueInit()
 {
     Queue new_queue;
@@ -99,9 +106,18 @@ void queueFree(Queue queue)
     } 
 }
 
+/*
+////////////////////////////////////////////////////////////////////////
+-----------------------------------------------------------------------
+                        FUNÇÕES DE USO INTERNO   
+-----------------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/
 static void createBuffer()
 {
-    int i = 0;
+    int i = 0; /* Contador */
+    
+    /* Cria a fila 'buffer' */
     buffer = (Queue) malloc(sizeof(*buffer));
     
     /* Vetor de nódulos, com tamanho BUF_INIT_SIZE */
@@ -149,7 +165,7 @@ static void resizeBuffer()
     /* Dobra o tamanho do buffer */
     buf_size = 2*buf_size;
     new_buffer->end = 
-        (Node *) malloc(buf_size * sizeof(*new_buffer->end));
+        (Link) malloc(buf_size * sizeof(*new_buffer->end));
     
     /* Nódulos apontam sequencialmente de um para outro */
     for(i = 0; i < buf_size-1; i++)
