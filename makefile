@@ -15,7 +15,7 @@ main.o: main.c
 getopt.o: getopt.c getopt.h
 	$(CC) $(CFLAGS) -c $^
 
-queue.o: queue.c queue.h Item.h
+queue.o: queue.c queue.h queue-internal.h Item.h
 	$(CC) $(CFLAGS) -c $^
 
 .PHONY: GDB
