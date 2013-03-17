@@ -1,21 +1,22 @@
+#include<stdio.h>
 #include<stdlib.h>
 #include "queue.h"
 
 #define BUF_INIT_SIZE 50
 
 /* Nódulos que compõem a fila */
-typedef struct node *Link;
-struct node {
-    Item item;
-    Link next;
-};
-typedef struct node Node;
+/* typedef struct node *Link; */
+/* struct node { */
+/*     Item item; */
+/*     Link next; */
+/* }; */
+/* typedef struct node Node; */
 
 /* Define o tipo 'Fila' (queue) */
-struct queue {
-    Link init;
-    Link end;
-};
+/* struct queue { */
+/*     Link init; */
+/*     Link end; */
+/* }; */
 /* typedef struct queue *Queue; */
 
 /* Cria um buffer para ser usado pela biblioteca */
@@ -30,13 +31,16 @@ static void resizeBuffer();
 Queue queueInit()
 {
     Queue new_queue;
+    printf("Ponteiro criado\n");
     
     /* Inicializa a nova fila */
     new_queue = (Queue) malloc(sizeof(*new_queue));
+    printf("Ponteiro alocado\n");
     new_queue->init = new_queue->end = NULL;
     
     /* Cria buffer, caso este não tenha sido inicializado */
     if(buffer == NULL) createBuffer();
+    printf("Buffer criado\n");
     
     return new_queue;
 }
@@ -56,11 +60,15 @@ void queuePut(Queue queue, Item item)
     
     /* Cria novo nódulo da fila */
     new_node = getBufferNode(); 
+    /* printf("getBufferNode\n"); */
     new_node->item = item;
     
     /* Inclui o novo nódulo na fila */
     new_node->next = NULL;
-    queue->init->next = new_node;
+    
+    if(queue->end == NULL) queue->end = new_node;
+    else queue->init->next = new_node;
+    
     queue->init = new_node;
 }
 
@@ -86,7 +94,7 @@ void queueFree(Queue queue)
     while(!queueEmpty(queue))
     {
         next_node = queue->end;
-        queue->end = queue->end->next;
+        queue->end = next_node->next;
         returnToBuffer(next_node);
     } 
 }
@@ -97,14 +105,15 @@ static void createBuffer()
     buffer = (Queue) malloc(sizeof(*buffer));
     
     /* Vetor de nódulos, com tamanho BUF_INIT_SIZE */
-    buffer->end = (Node *) malloc(BUF_INIT_SIZE * sizeof(*buffer));
+    buffer->end = (Link) malloc(BUF_INIT_SIZE * sizeof(*buffer->end));
     
     /* Nódulos apontam sequencialmente de um para outro */
-    for(i = 0; i < BUF_INIT_SIZE; i++)
+    for(i = 0; i < BUF_INIT_SIZE-1; i++)
         buffer->end[i].next = &buffer->end[i+1];
+    buffer->end[i].next = NULL;
     
     /* Arruma sinal para o fim da fila */
-    buffer->init = &buffer->end[BUF_INIT_SIZE];
+    buffer->init = &buffer->end[BUF_INIT_SIZE-1];
     buffer->init->next = NULL;
 }
 
@@ -125,7 +134,9 @@ static void returnToBuffer(Link node)
     node->next = NULL;
     
     /* Devolve nódulo ao buffer */
-    buffer->init->next = node;
+    if(queueEmpty(buffer)) buffer->end = node;
+    else buffer->init->next = node;
+    
     buffer->init = node;
 }
 
@@ -138,17 +149,20 @@ static void resizeBuffer()
     /* Dobra o tamanho do buffer */
     buf_size = 2*buf_size;
     new_buffer->end = 
-        (Node *) malloc(buf_size * sizeof(*new_buffer));
+        (Node *) malloc(buf_size * sizeof(*new_buffer->end));
     
     /* Nódulos apontam sequencialmente de um para outro */
-    for(i = 0; i < buf_size; i++)
-        new_buffer->end[i] = buffer->end[i+1];
-
+    for(i = 0; i < buf_size-1; i++)
+        new_buffer->end[i].next = &new_buffer->end[i+1];
+    new_buffer->init = &new_buffer->end[buf_size-1];
+    
     /* Adicionamos os novos nódulos ao início da fila */
-    buffer->init = new_buffer->end;
+    if(queueEmpty(buffer)) buffer->end = new_buffer->end;
+    else buffer->init->next = new_buffer->end;
+    
+    buffer->init = new_buffer->init;
     
     /* Arruma sinal para o fim da fila */
-    buffer->init = &new_buffer->end[buf_size];
     buffer->init->next = NULL;
     
     /* Libera o ponteiro auxiliar 'new_buffer' */
