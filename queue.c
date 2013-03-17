@@ -1,5 +1,4 @@
 #include<stdlib.h>
-#include "Item.h"
 #include "queue.h"
 
 #define BUF_INIT_SIZE 50
@@ -17,7 +16,7 @@ struct queue {
     Link init;
     Link end;
 };
-typedef struct queue *Queue;
+/* typedef struct queue *Queue; */
 
 /* Cria um buffer para ser usado pela biblioteca */
 static Queue buffer;
