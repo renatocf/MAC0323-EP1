@@ -11,5 +11,5 @@ Queue queueInit();
 int queueEmpty(Queue);
 void queuePut(Queue, Item);
 Item queueGet(Queue);
-void queueFree();
+void queueFree(Queue);
 #endif

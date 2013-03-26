@@ -1,5 +1,13 @@
-#include<stdio.h>
+/* 
+ * NOME: Karina Suemi Awoki
+ *       Renato Cordeiro Ferreira
+ *       Ruan de Menezes Costa
+ *       Vinícius Silva
+ */
+
 #include<stdlib.h>
+#include<stdio.h>
+#include<math.h>
 
 #include "getopt.h"
 #include "queue.h"
@@ -32,6 +40,8 @@ char help[]  = "LIMIAR DE CONEXIDADE PARA CERTOS GRAFOS GEOMÉTRICOS\n"
                "      densidade normalizada crítica (modo 2);\n";
 
 int receive_arguments(int argc, char **argv, Options *args);
+int check_connectivity(point *Points, int N, float d, int verb_mode);
+float calc_normalized_critical_density(point *Points, int N, int M, int verb_mode);
 
 /*
 ////////////////////////////////////////////////////////////////////////
@@ -43,9 +53,12 @@ int receive_arguments(int argc, char **argv, Options *args);
 int main(int argc, char **argv)
 {
     /** VARIÁVEIS *****************************************************/
-        point a;
         int func_err;
-        int i;
+        int i /*, j */;
+        int verb_mode = 0;
+        point *Points;
+        point a;
+        float d;
         
         /* Struct com argumentos da linha de comando */
         Options args = { 0, 0, 0, 314159265, 0, 0 }; 
@@ -65,17 +78,133 @@ int main(int argc, char **argv)
             printf("\n%s%s\n", error, usage);
             return EXIT_FAILURE;
         }
+        
+        verb_mode = args.v + args.V;
     
     /** PONTOS ALEATÓRIOS *********************************************/
         set_seed(args.s);
         a = r_point();
-        printf("%f %f", a.x, a.y);
+        printf("teste semente: %f %f\n", a.x, a.y);
+        
+        /* Gera vetor com pontos aleatórios */
+        Points = (point *) malloc(args.N * sizeof(*Points));
+        for(i = 0; i < args.N; i++) 
+        {
+            Points[i] = r_point();
+            if(verb_mode) 
+                printf("%d: %f %f\n", i, Points[i].x, Points[i].y);
+        }
+        
+    /** MODO 1: CONEXIDADE ********************************************/
+        if(args.d != 0) 
+        {
+            /* func_err =  */
+            /*     check_connectivity(Points, args.N, args.d, verb_mode); */
+            if(func_err)
+                printf("Grafo não é conexo para d = %g\n", args.d);
+            else 
+                printf("Grafo é conexo para d = %g\n", args.d);
+        }
+        
+    /** MODO 2: DENSIDADE NORMALIZADA CRÍTICA *************************/
+        if(args.M != 0)
+        {
+            d = calc_normalized_critical_density(Points, args.N, args.M, verb_mode);
+            printf("Densidade normalizada crítica d = %f", d);
+        }
     
+    printf("\n");
     for(i = 0; i < argc; i++)
         printf("%s ", argv[i]);
     printf("\n");
     
     return 0;
+}
+
+float calc_normalized_critical_density(point *Points, int N, int M, int verb_mode)
+{
+    int i, j;
+    float dist = 0;
+    float smaller = 0;
+    int smaller_p = 0;
+    float largest = 0;
+    
+    for(i = 0; i < N; i++)
+    {
+        if(verb_mode) printf("\n");
+        dist = 0; smaller = sqrt(2);
+        for(j = i+1; j < N; j++)
+        {
+            dist = distance(Points[i], Points[j]);
+            if(verb_mode) printf("%g ", dist);
+            if(dist < smaller) 
+            {
+                smaller = dist;
+                smaller_p = j;
+            }
+        }
+        if(verb_mode) printf("\n");
+        if(verb_mode) printf("* smaller_p: %d\n", smaller_p);
+        if(verb_mode) printf("* smaller: %g\n", smaller);
+        if(verb_mode) printf("* largest: %g\n", largest);
+        for(j = i; j > 0; j--)
+        {
+            dist = distance(Points[smaller_p], Points[j]);
+            if(verb_mode) printf("%g ", dist);
+            if(dist < smaller)
+            {
+                smaller = dist;
+                smaller_p = j;
+            }
+        }
+        if(verb_mode) printf("\n");
+        if(verb_mode) printf("* smaller_p: %d\n", smaller_p);
+        if(verb_mode) printf("* smaller: %g\n", smaller);
+        if(verb_mode) printf("* largest: %g\n", largest);
+        if(smaller > largest) largest = smaller;
+    }
+    return largest;
+}
+
+int check_connectivity(point *Points, int N, float d, int verb_mode)
+{
+    Queue border;
+    char *connected;
+    int i, calc, n_con = 0, q_size = 0;
+    point query;
+    
+    connected = (char *) malloc(N * sizeof(*connected));
+    border = queueInit();
+    
+    queuePut(border, Points[0]);
+    connected[0] = 1;
+    q_size = 1;
+    
+    while(!queueEmpty(border))
+    {
+        query = queueGet(border); calc = 0; q_size--;
+        for(i = 0; i < N; i++)
+        {
+            if(connected[i] == 1) {
+                continue;/* CUIDADO COM O LIXO! */
+            }
+            calc = 1;
+            if(distance(query, Points[i]) < d)
+            {
+                /* printf("Mais um conexo!\n"); */
+                n_con++;
+                queuePut(border, Points[i]); q_size++;
+                connected[i] = 1;
+            }
+            if(verb_mode) printf("q_size: %d n_con: %d\n", q_size, n_con);
+        }
+        if(calc == 0) return EXIT_SUCCESS;
+        /* if(n_con % 10 == 0) printf("rodada de 10\n"); */
+    }
+    
+    queueFree(); free(connected);
+    
+    return EXIT_FAILURE;
 }
 
 int receive_arguments(int argc, char **argv, Options *args)

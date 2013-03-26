@@ -2,33 +2,6 @@
 #include<stdlib.h>
 
 #include "queue-internal.h"
-
-/* #define BUF_INIT_SIZE 50 */
-
-/* Nódulos que compõem a fila */
-/* typedef struct node *Link; */
-/* struct node { */
-/*     Item item; */
-/*     Link next; */
-/* }; */
-/* typedef struct node Node; */
-
-/* Define o tipo 'Fila' (queue) */
-/* struct queue { */
-/*     Link init; */
-/*     Link end; */
-/* }; */
-/* typedef struct queue *Queue; */
-
-/* Cria um buffer para ser usado pela biblioteca */
-/* static Queue buffer; */
-/* static int buf_size = BUF_INIT_SIZE/2; */
-/*  */
-/* static void createBuffer(); */
-/* static Link getBufferNode(); */
-/* static void returnToBuffer(Link node); */
-/* static void resizeBuffer(); */
-
 /*
 ////////////////////////////////////////////////////////////////////////
 -----------------------------------------------------------------------

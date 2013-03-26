@@ -1,4 +1,7 @@
 #ifndef H_ITEM_INCLUDED
 #define H_ITEM_INCLUDED
-typedef int Item;
+
+#include "Point.h"
+typedef point Item;
+
 #endif
