@@ -6,7 +6,7 @@
 
 /* Estrutura de uma Parent Link Tree */
 /* struct plTree { */
-/*     PL_Item plt; */
+/*     PL_Item *plt; */
 /*     int *dad; */
 /* }; */
 
@@ -17,7 +17,7 @@
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-PLTree pltree_init(PL_Item item)
+PLTree pltree_init(PL_Item *item)
 {
     PLTree new;
     new = (PLTree) malloc(sizeof(*new));

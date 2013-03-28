@@ -6,6 +6,6 @@
  * mentos em seu conteúdo */
 
 #include "pqueue.h"
-typedef int *PL_Item;
+typedef int PL_Item;
 
 #endif
