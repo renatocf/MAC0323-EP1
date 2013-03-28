@@ -17,7 +17,7 @@
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-PLTree pltree_init(PL_Item *item)
+PLTree pltree_init(PL_Item item)
 {
     PLTree new;
     new = (PLTree) malloc(sizeof(*new));
