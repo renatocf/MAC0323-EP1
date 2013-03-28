@@ -1,10 +1,13 @@
 #ifndef H_PQUEUE_DEFINED
 #define H_PQUEUE_DEFINED
 
-#include "Item2.h"
+/* Bibliotecas */
+#include "pqueue-item.h"
 
+/* Handler para priority queue */
 typedef struct pQueue *PQueue;
 
+/* Funções para o cliente */
 PQueue pqinit      (int);
 void   pqsort      (PQueue, int);
 int    pqempty     (PQueue);

@@ -1,7 +1,7 @@
 #ifndef H_PQUEUE_INTERNAL_DEFINED
 #define H_PQUEUE_INTERNAL_DEFINED
 
-#include "Item2.h"
+/* Bibliotecas */
 #include "pqueue.h"
 
 /* Macros */
@@ -13,6 +13,7 @@ struct pQueue {
     Item *q;
 };
 
+/* Funções de uso interno */
 static void uphead(PQueue pqueue, int k);
 static void downheap(PQueue pqueue, int k, int last);
 static void build_maxheap(PQueue pqueue, int last);
