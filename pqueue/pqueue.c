@@ -19,7 +19,7 @@ PQueue pqinit(int N)
     /* Inicializa nova priority queue com N+1 elementos,
      * tamanho 'N' e última posição preenchida como '0' */
     new_pqueue->last = 0; new_pqueue->size = N+1;
-    new_pqueue->q = (Item *) malloc((N+1) * sizeof(*new_pqueue));
+    new_pqueue->q = (PQ_Item *) malloc((N+1) * sizeof(*new_pqueue));
     
     return new_pqueue;
 }
@@ -29,7 +29,7 @@ void pqconstruct(PQueue pqueue, int last)
     build_maxheap(pqueue, last);
 }
 
-void pqinsert(PQueue pqueue, Item item)
+void pqinsert(PQueue pqueue, PQ_Item item)
 {
     int item_position = pqueue->last + 1; 
     if(item_position <= pqueue->size)
@@ -40,15 +40,15 @@ void pqinsert(PQueue pqueue, Item item)
     }
 }
 
-void pqreplace(PQueue pqueue, Item item)
+void pqreplace(PQueue pqueue, PQ_Item item)
 {
     pqueue->q[ROOT] = item;
     downheap(pqueue, ROOT, pqueue->last);
 }
 
-Item pqremove(PQueue pqueue)
+PQ_Item pqremove(PQueue pqueue)
 {
-    Item removed = pqueue->q[ROOT];
+    PQ_Item removed = pqueue->q[ROOT];
     int last = pqueue->last;
     
     pqueue->q[ROOT] = pqueue->q[last];
@@ -78,7 +78,7 @@ int pqempty(PQueue pqueue)
 */
 static void uphead(PQueue pqueue, int k)
 {
-    Item aux = pqueue->q[k];
+    PQ_Item aux = pqueue->q[k];
     int dad = k/2;
     
     while(le(pqueue->q[dad], aux) && dad != 0)
@@ -92,7 +92,7 @@ static void uphead(PQueue pqueue, int k)
 static void downheap(PQueue pqueue, int k, int last)
 {
     int son = 2*k;
-    Item aux = pqueue->q[k];
+    PQ_Item aux = pqueue->q[k];
 
     /* Leva um elemento até sua posição no heap */
     while(son <= last)
@@ -116,7 +116,7 @@ static void build_maxheap(PQueue pqueue, int last)
 
 static void heapsort(PQueue pqueue, int last)
 {
-    Item swp; /* AUxiliar para troca */
+    PQ_Item swp; /* AUxiliar para troca */
 
     /* Pré-processamento */
     build_maxheap(pqueue, last);

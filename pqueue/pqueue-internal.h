@@ -10,7 +10,7 @@
 struct pQueue {
     int last;
     int size;
-    Item *q;
+    PQ_Item *q;
 };
 
 /* Funções de uso interno */
