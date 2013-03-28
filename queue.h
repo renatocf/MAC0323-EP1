@@ -3,7 +3,6 @@
 #include "Item.h"
 
 /* Define a estrutura de fila 'Queue' */
-struct queue;
 typedef struct queue *Queue;
 
 /* Protótipos */

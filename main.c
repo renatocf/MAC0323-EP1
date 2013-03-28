@@ -1,10 +1,3 @@
-/* 
- * NOME: Karina Suemi Awoki
- *       Renato Cordeiro Ferreira
- *       Ruan de Menezes Costa
- *       Vinícius Silva
- */
-
 #include<stdlib.h>
 #include<stdio.h>
 #include<math.h>
@@ -202,7 +195,7 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
         /* if(n_con % 10 == 0) printf("rodada de 10\n"); */
     }
     
-    queueFree(); free(connected);
+    queueFree(border); free(connected);
     
     return EXIT_FAILURE;
 }
