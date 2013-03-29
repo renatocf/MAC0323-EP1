@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include "ipqueue-internal.h"
+#include "pltree-internal.h"
 
 #define N_ELEMENTS 10
 
@@ -7,7 +8,9 @@ int main(int argc, char **argv)
 {
     int i, j;
     IPQueue teste;
+    PLTree arvore;
     teste = ipqinit(N_ELEMENTS);
+    arvore = pltree_init(teste);
     
     for(i = 1; i < ipqsize(teste); i++)
         ipqinsert(teste, i);
@@ -73,6 +76,39 @@ int main(int argc, char **argv)
     printf("q: ");
     for(j = 0; j <= ipqnelements(teste); j++)
         printf("%d ", teste->q[j]);
+    printf("\n");
+    
+    printf("Tree test:\n");
+    printf("d: ");
+    find_init(arvore, teste->size);
+    for(j = 0; j <= ipqnelements(teste); j++)
+        printf("%d ", arvore->dad[j]);
+    printf("\n");
+    
+    printf("Union-Find test:\n");
+    printf("JOIN (1,2), JOIN(6,8), JOIN(2,8), KEEP(2,8)\n");
+    printf("d: ");
+    union_find(arvore, 1, 2, JOIN);
+    for(j = 0; j <= ipqnelements(teste); j++)
+        printf("%d ", arvore->dad[j]);
+    printf("\n");
+    
+    printf("d: ");
+    union_find(arvore, 6, 8, JOIN);
+    for(j = 0; j <= ipqnelements(teste); j++)
+        printf("%d ", arvore->dad[j]);
+    printf("\n");
+    
+    printf("d: ");
+    union_find(arvore, 2, 8, JOIN);
+    for(j = 0; j <= ipqnelements(teste); j++)
+        printf("%d ", arvore->dad[j]);
+    printf("\n");
+    
+    printf("d: ");
+    union_find(arvore, 2, 8, KEEP);
+    for(j = 0; j <= ipqnelements(teste); j++)
+        printf("%d ", arvore->dad[j]);
     printf("\n");
     
     return 0;

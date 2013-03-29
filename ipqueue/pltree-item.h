@@ -5,7 +5,7 @@
  * seu algum tipo de lista que contenha 'N' ele-
  * mentos em seu conteúdo. */
 
-#include "pqueue.h"
-typedef int *PL_Item;
+#include "ipqueue.h"
+typedef IPQueue PL_Item;
 
 #endif
