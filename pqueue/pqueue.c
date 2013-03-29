@@ -69,6 +69,16 @@ int pqempty(PQueue pqueue)
     return 0;
 }
 
+int pqsize(PQueue pqueue)
+{
+    return pqueue->size;
+}
+
+int pqnelements(PQueue pqueue)
+{
+    return pqueue->last;
+}
+
 /*
 ////////////////////////////////////////////////////////////////////////
 -----------------------------------------------------------------------

@@ -2,13 +2,7 @@
 #include<stdlib.h>
 
 /* Bibliotecas */
-#include "pltree.h"
-
-/* Estrutura de uma Parent Link Tree */
-/* struct plTree { */
-/*     PL_Item *plt; */
-/*     int *dad; */
-/* }; */
+#include "pltree-internal.h"
 
 /*
 ////////////////////////////////////////////////////////////////////////
@@ -17,13 +11,18 @@
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-PLTree pltree_init(PL_Item *item)
+PLTree pltree_init(PL_Item item)
 {
     PLTree new;
     new = (PLTree) malloc(sizeof(*new));
     
     new->plt = item;
     return new;
+}
+
+PL_Item pltree_list(PLTree pltree)
+{
+    return pltree->plt;
 }
 
 void find_init(PLTree pltree, int N)

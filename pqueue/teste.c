@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include "pqueue-internal.h"
-#include "pltree.h"
+#include "pltree-internal.h"
 
 int main(int argc, char **argv)
 {

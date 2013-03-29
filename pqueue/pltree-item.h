@@ -3,9 +3,9 @@
 
 /* O Item utilizado pela parent link tree deve
  * seu algum tipo de lista que contenha 'N' ele-
- * mentos em seu conteúdo */
+ * mentos em seu conteúdo. */
 
 #include "pqueue.h"
-typedef int PL_Item;
+typedef int *PL_Item;
 
 #endif

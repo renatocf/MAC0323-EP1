@@ -7,24 +7,51 @@ struct edge {
     float w;
 };
 
-void krustal(KRlist edges)
+void krustal(KRlist krlist, int V, int E)
 {   
-    /* PLTree edg = find_init(edges); */
-    /* pqconstruct */
+    PQueue edges = pltree_list(krlist);
+    int i = 0, N = pqsize(edges);
+    
+    find_init(krlist, N);
+    pqconstruct(edges);
+    
+    while(!pqempty(edges))
+    {
+        
+    }
 }
 
 KRlist krlist_init(int N)
 {
-    PQueue edges; PLtree e;
+    PQueue edges; /* edges é uma pqueue de 
+                   * struct edge (Edge) */
+    KRlist new;   /* KRList é uma pltree 
+                   * cuja lista é uma pqueue */
+    
     edges = pqinit(N);
-    
-    e = pltree_init(edges);
-    
-    return e;
+    new = pltree_init(edges);
+    return new;
 }
 
-
-float edge_weight(KR_list e, Edge edge) 
+void krlist_insert(KRlist krlist, KR_Item *v1, KR_Item *v2, float w)
+    /* VERIFICAR SE ESTOUROU O MÁXIMO */
 {
-    return e->*plt[N]->w; 
+    PQueue edges = pltree_list(krlist);
+    Edge new = { v1, v2, w };
+    
+    pqinsert(edges, new);
 }
+
+/*Edge krlist_remove(KRlist krlist)
+{
+    PQueue edges = pltree_list(krlist);
+    Edge deleted = pqremove(edges);
+    
+    return deleted;
+}
+
+int krlist_empty(KRlist krlist)
+{
+    PQueue edges = pltree_list(krlist);
+    return pqempty(edges);
+}*/
