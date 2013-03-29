@@ -1,30 +1,26 @@
-CC=gcc
-CFLAGS=-ansi -Wall -pedantic -O2
-LDFLAGS=-lm
-BIN=bin
+# SOURCE ###############################################################
+SRC = main.c getopt.c queue.c Point.c
+OBJ = $(SRC:.c=.o)
 
-RM=rm -f
-RMARGS=*.o *.gch
+# PROGRAMS #############################################################
+CC = gcc
+RM = rm -f
 
-conectivity: main.o getopt.o queue.o Point.o
+# DIRECTORIES ##########################################################
+LDLIBS = -L.
+CLIBS = -I.
+BIN = bin
+
+# FLAGS ################################################################
+CFLAGS = -g -ansi -Wall -pedantic -O2
+LDFLAGS = -lm
+
+# TARGETS ##############################################################
+conectivity: $(OBJ)
 	$(CC) $^ -o $(BIN)/$@ $(LDFLAGS)
-	# @ $(RM) $(RMARGS)
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c $^
-
-getopt.o: getopt.c getopt.h
-	$(CC) $(CFLAGS) -c $^
-
-queue.o: queue.c queue.h queue-internal.h Item.h
-	$(CC) $(CFLAGS) -c $^
-
-Point.o: Point.c Point.h
-	$(CC) $(CFLAGS) -c $^
-
-.PHONY: GDB
-GDB: main.o getopt.o queue.o
-	$(CC) $(CFLAGS) -g $^ -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) $(CLIBS) -c $^
 
 clean:
-	$(RM) $(RMARGS)
+	$(RM) *.o *.gch *~
