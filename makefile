@@ -1,14 +1,15 @@
 # SOURCE ###############################################################
-SRC = main.c getopt.c queue.c Point.c
-OBJ = $(SRC:.c=.o)
+SRC = queue.c main.c getopt.c Point.c
+OBJ = $(patsubst %.c,obj/%.o,$(SRC))
 
 # PROGRAMS #############################################################
 CC = gcc
 RM = rm -f
 
 # DIRECTORIES ##########################################################
-LDLIBS = -L.
-CLIBS = -I.
+VPATH = queue
+CLIBS = -Iqueue
+LDLIBS = -L. 
 BIN = bin
 
 # FLAGS ################################################################
@@ -16,11 +17,22 @@ CFLAGS = -g -ansi -Wall -pedantic -O2
 LDFLAGS = -lm
 
 # TARGETS ##############################################################
+
+# all:
+# 	echo $(SRC)
+# 	echo $(OBJ)
+
 conectivity: $(OBJ)
 	$(CC) $^ -o $(BIN)/$@ $(LDFLAGS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(CLIBS) -c $^
+$(OBJ): | obj
+
+obj:
+	echo $(OBJ)
+	mkdir -p $@
+
+obj/%.o: %.c
+	$(CC) $(CFLAGS) $(CLIBS) -c $^ -o $@
 
 clean:
-	$(RM) *.o *.gch *~
+	$(RM) obj/*.o

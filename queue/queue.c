@@ -32,7 +32,7 @@ int queueEmpty(Queue queue)
     return 0;
 }
 
-void queuePut(Queue queue, Item item)
+void queuePut(Queue queue, Q_Item item)
 {
     Link new_node;
     
@@ -53,9 +53,9 @@ void queuePut(Queue queue, Item item)
     queue->init = new_node;
 }
 
-Item queueGet(Queue queue)
+Q_Item queueGet(Queue queue)
 {
-    Item vestige;
+    Q_Item vestige;
     Link old_node;
     
     /* Tira o nódulo da fila */

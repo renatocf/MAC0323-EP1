@@ -1,6 +1,5 @@
 #ifndef H_QUEUE_INTERNAL_INCLUDED
 #define H_QUEUE_INTERNAL_INCLUDED
-#include "Item.h"
 #include "queue.h"
 
 #define BUF_INIT_SIZE 50
@@ -8,7 +7,7 @@
 /* Define os nódulso da fila e os links para eles */
 typedef struct node *Link;
 typedef struct node {
-    Item item;
+    Q_Item item;
     Link next;
 } Node;
 
