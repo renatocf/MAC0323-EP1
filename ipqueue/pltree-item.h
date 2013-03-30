@@ -6,6 +6,6 @@
  * mentos em seu conteúdo. */
 
 #include "ipqueue.h"
-typedef IPQueue PL_Item;
+typedef point *PL_Item;
 
 #endif

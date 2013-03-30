@@ -1,3 +1,6 @@
+SRC = %.c krustal.c pltree.c ipqueue.c
+OBJ = $(SRC:.c=.o)
+
 CFLAGS=-g -I. -ansi -Wall -pedantic
 LDFLAGS=-lm
 LDLIBS=-L.
@@ -5,7 +8,7 @@ LDLIBS=-L.
 CC=gcc
 RM=rm -f
 
-teste: ipqueue.o pltree.o teste.o
+%: $(OBJ)
 	$(CC) $^ -o $@ $(LDLIBS) $(LDFLAGS)
 
 %.o: %.c

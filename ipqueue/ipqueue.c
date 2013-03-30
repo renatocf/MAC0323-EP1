@@ -11,7 +11,7 @@
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-IPQueue ipqinit(int N)
+IPQueue ipq_init(int N)
 {
     IPQueue new_ipqueue;
     new_ipqueue = (IPQueue) malloc(sizeof(*new_ipqueue));
@@ -28,7 +28,7 @@ IPQueue ipqinit(int N)
     return new_ipqueue;
 }
 
-void ipqconstruct(IPQueue ipqueue, int last)
+void ipq_construct(IPQueue ipqueue, int last)
 {
     int k; /* Auxiliar para inicializar 'p' e 'q' */
     
@@ -36,7 +36,7 @@ void ipqconstruct(IPQueue ipqueue, int last)
     build_maxheap(ipqueue, last);
 }
 
-void ipqinsert(IPQueue ipqueue, IPQ_Item item)
+void ipq_insert(IPQueue ipqueue, IPQ_Item item)
 {
     int item_position = ipqueue->last + 1; 
     if(item_position <= ipqueue->size)
@@ -47,47 +47,58 @@ void ipqinsert(IPQueue ipqueue, IPQ_Item item)
     }
 }
 
-void ipqreplace(IPQueue ipqueue, IPQ_Item item)
+void ipq_replace(IPQueue ipqueue, IPQ_Item item)
 {
     int *p = ipqueue->p;
     ipqueue->a[p[ROOT]] = item;
     downheap(ipqueue, ROOT, ipqueue->last);
 }
 
-int ipqremove(IPQueue ipqueue)
+int ipq_remove(IPQueue ipqueue)
 {
     int last = ipqueue->last;
     int *p = ipqueue->p;
-    int removed = p[ROOT];
+    int removed = last;
+    IPQ_Item aux;
     
+    /* Troca último elemento de posição com o
+     * ROOT do heap */
+    aux = ipqueue->a[p[ROOT]];
     ipqueue->a[p[ROOT]] = ipqueue->a[last];
+    ipqueue->a[last] = aux;
+    
     ipqueue->last--;
     
-    ipqconstruct(ipqueue, last);
+    ipq_construct(ipqueue, last);
     /* downheap(ipqueue, ROOT, ipqueue->last); */
 
     return removed;
 }
 
-void ipqsort(IPQueue ipqueue, int last)
+void ipq_sort(IPQueue ipqueue, int last)
 {
     heapsort(ipqueue, last);
 }
 
-int ipqempty(IPQueue ipqueue)
+int ipq_empty(IPQueue ipqueue)
 {
     if(ipqueue->last == 0) return 1;
     return 0;
 }
 
-int ipqsize(IPQueue ipqueue)
+int ipq_size(IPQueue ipqueue)
 {
     return ipqueue->size;
 }
 
-int ipqnelements(IPQueue ipqueue)
+int ipq_nelements(IPQueue ipqueue)
 {
     return ipqueue->last;
+}
+
+IPQ_Item ipqget(IPQueue ipqueue, int pos)
+{
+    return ipqueue->a[pos];
 }
 
 /*
@@ -153,11 +164,12 @@ static void heapsort(IPQueue ipqueue, int last)
     /* Pré-processamento */
     build_maxheap(ipqueue, last);
     
-    /* Ordena o vetor */
+    /* Ordena o vetor que representa o heap (q) */
     for(aux = last; last >= 2; last--)
     {
         swp1 = p[ROOT]; p[ROOT] = p[last]; p[last] = swp1;
         downheap(ipqueue, ROOT, last-1);
     }
+    /* Organiza o vetor inverso (q) a partir do heap (p) */
     for(swp1 = 1; swp1 <= aux; swp1++) q[p[swp1]] = swp1;
 }

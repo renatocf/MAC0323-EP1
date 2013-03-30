@@ -1,57 +1,90 @@
-#include "pqueue.h"
+#include<stdlib.h>
+
+/* Bibliotecas */
+#include "edge.h"
+#include "krustal.h"
+#include "ipqueue.h"
 #include "pltree.h"
 
-struct edge {
-    KR_Item *v1;
-    KR_Item *v2;
-    float w;
+/* Estrutura krList */
+struct krList {
+    PLTree vertices;
+    IPQueue edges;
 };
 
-void krustal(KRlist krlist, int V, int E)
+/* Função auxiliar para restagar índice de vetor: */
+static int index(PL_Item vector, PL_Item element) 
+    { return vector - element; }
+
+/*
+////////////////////////////////////////////////////////////////////////
+-----------------------------------------------------------------------
+                        FUNÇÕES DE USO EXTERNO   
+-----------------------------------------------------------------------
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+*/
+void krustal(KRlist krlist, int V, int E, void (*edgefound) (int))
 {   
-    PQueue edges = pltree_list(krlist);
-    int i = 0, N = pqsize(edges);
+    int r_pos; Edge removed; /* Aresta removida */
+    int index_v1, index_v2;
+    int i = 0; /* Auxiliar para número de arestas removidas */
     
-    find_init(krlist, N);
-    pqconstruct(edges);
+    /* Inicializa parent link tree para vértices
+     * e indirect priority queue para as arestas */
+    find_init(krlist->vertices, V);
+    ipq_construct(krlist->edges, E);
     
-    while(!pqempty(edges))
+    /* Para a lista de arestas, busca pelas arestas de 
+     * custo mínimo. Se encontrar V-1 arestas, têm uma
+     * árvore de custo mínimo. Se o laço terminar, po-
+     * rém, o grafo não é conexo. Quando uma aresta é 
+     * encontrada, realiza a ação da função passada 
+     * como parâmetro "edgefound". */
+    while(!ipq_empty(krlist->edges))
     {
+        r_pos = ipq_remove(krlist->edges);
+        removed = ipq_get(krlist->edges, r_pos);
+        PL_Item vertices = pltree_list(krlist->vertices);
         
+        index_v1 = index(vertices, removed.v1);
+        index_v2 = index(vertices, removed.v2);
+        
+        if(union_find(krlist->vertices, index_v1, index_v2, JOIN)) 
+            { edgefound(r_pos); i++; }
+        if(i == V-1) break;
     }
 }
 
-KRlist krlist_init(int N)
+KRlist krlist_init(PL_Item vertices, int E)
 {
-    PQueue edges; /* edges é uma pqueue de 
-                   * struct edge (Edge) */
-    KRlist new;   /* KRList é uma pltree 
-                   * cuja lista é uma pqueue */
+    KRlist new = (KRlist) malloc(sizeof(*new));
     
-    edges = pqinit(N);
-    new = pltree_init(edges);
+    /* Inicializa lista de prioridades para os vértices: */
+    new->vertices = pltree_init(vertices);
+    
+    /* Inicializa parent link tree para os vértices */
+    new->edges = ipq_init(E);
     return new;
 }
 
-void krlist_insert(KRlist krlist, KR_Item *v1, KR_Item *v2, float w)
+void krlist_insert_edge(KRlist krlist, E_Item *v1, E_Item *v2, float w)
     /* VERIFICAR SE ESTOUROU O MÁXIMO */
 {
-    PQueue edges = pltree_list(krlist);
     Edge new = { v1, v2, w };
-    
-    pqinsert(edges, new);
+    ipq_insert(krlist->edges, new);
 }
 
-/*Edge krlist_remove(KRlist krlist)
-{
-    PQueue edges = pltree_list(krlist);
-    Edge deleted = pqremove(edges);
-    
-    return deleted;
+float krlist_get_w(KRlist krlist, int pos)
+{    
+    return ipq_get(krlist->edges, pos).w;
 }
 
-int krlist_empty(KRlist krlist)
-{
-    PQueue edges = pltree_list(krlist);
-    return pqempty(edges);
-}*/
+E_Item *krlist_get_v1(KRlist krlist, int pos)
+{    
+    return ipq_get(krlist->edges, pos).v1;
+}
+
+E_Item *krlist_get_v2(KRlist krlist, int pos)
+{    
+    return ipq_get(krlist->edges, pos).v2;
+}

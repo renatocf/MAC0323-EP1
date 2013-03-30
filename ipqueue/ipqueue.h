@@ -8,14 +8,15 @@
 typedef struct ipQueue *IPQueue;
 
 /* Funções para o cliente */
-IPQueue  ipqinit      (int);
-int      ipqsize      (IPQueue);
-void     ipqsort      (IPQueue, int);
-int      ipqempty     (IPQueue);
-void     ipqinsert    (IPQueue, IPQ_Item);
-int      ipqremove    (IPQueue);
-void     ipqreplace   (IPQueue, IPQ_Item);
-void     ipqconstruct (IPQueue, int);
-int      ipqnelements (IPQueue);
+IPQ_Item ipq_get       (IPQueue, int);
+IPQueue  ipq_init      (int);
+int      ipq_size      (IPQueue);
+void     ipq_sort      (IPQueue, int);
+int      ipq_empty     (IPQueue);
+void     ipq_insert    (IPQueue, IPQ_Item);
+int      ipq_remove    (IPQueue);
+void     ipq_replace   (IPQueue, IPQ_Item);
+void     ipq_construct (IPQueue, int);
+int      ipq_nelements (IPQueue);
 
 #endif

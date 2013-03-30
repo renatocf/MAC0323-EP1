@@ -91,8 +91,8 @@ int main(int argc, char **argv)
     /** MODO 1: CONEXIDADE ********************************************/
         if(args.d != 0) 
         {
-            /* func_err =  */
-            /*     check_connectivity(Points, args.N, args.d, verb_mode); */
+            func_err = 
+                check_connectivity(Points, args.N, args.d, verb_mode);
             if(func_err)
                 printf("Grafo não é conexo para d = %g\n", args.d);
             else 

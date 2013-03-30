@@ -11,7 +11,9 @@
  * objetos. 
  */
 
-typedef int IPQ_Item;
-#define le(X,Y) ((X) <= (Y))
+#include "edge.h"
+
+typedef Edge IPQ_Item;
+#define le(X,Y) (((X).w) <= ((Y).w))
 
 #endif
