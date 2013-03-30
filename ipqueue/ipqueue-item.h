@@ -14,6 +14,6 @@
 #include "edge.h"
 
 typedef Edge IPQ_Item;
-#define le(X,Y) (((X).w) <= ((Y).w))
+#define le(X,Y) (((X).w) >= ((Y).w))
 
 #endif

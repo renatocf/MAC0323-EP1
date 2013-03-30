@@ -96,7 +96,7 @@ int ipq_nelements(IPQueue ipqueue)
     return ipqueue->last;
 }
 
-IPQ_Item ipqget(IPQueue ipqueue, int pos)
+IPQ_Item ipq_get(IPQueue ipqueue, int pos)
 {
     return ipqueue->a[pos];
 }

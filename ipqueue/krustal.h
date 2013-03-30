@@ -9,7 +9,7 @@
 typedef struct krList *KRlist;
 
 /* Algoritmo de Krustal */
-void krustal(KRlist krlist, int V, int E, void (*edgefound) (int));
+void krustal(KRlist, int V, int E, void (*edgefound)(KRlist,int));
 
 /* Funções para manipulação da lista */
 KRlist  krlist_init        (PL_Item vertices, int E);
