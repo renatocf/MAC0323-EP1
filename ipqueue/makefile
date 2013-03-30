@@ -1,4 +1,4 @@
-SRC = teste2.c krustal.c pltree.c ipqueue.c
+eRC = teste.c krustal.c pltree.c ipqueue.c
 OBJ = $(SRC:.c=.o)
 
 CFLAGS=-g -I. -ansi -Wall -pedantic
@@ -8,7 +8,7 @@ LDLIBS=-L.
 CC=gcc
 RM=rm -f
 
-teste2: $(OBJ)
+teste: $(OBJ)
 	$(CC) $^ -o $@ $(LDLIBS) $(LDFLAGS)
 
 %.o: %.c
