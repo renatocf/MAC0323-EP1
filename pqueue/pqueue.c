@@ -11,7 +11,7 @@
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-PQueue pqinit(int N)
+PQueue pq_init(int N)
 {
     PQueue new_pqueue;
     new_pqueue = (PQueue) malloc(sizeof(*new_pqueue));
@@ -19,17 +19,17 @@ PQueue pqinit(int N)
     /* Inicializa nova priority queue com N+1 elementos,
      * tamanho 'N' e última posição preenchida como '0' */
     new_pqueue->last = 0; new_pqueue->size = N+1;
-    new_pqueue->q = (PQ_Item *) malloc((N+1) * sizeof(*new_pqueue));
+    new_pqueue->q = (PQ_Item *) malloc((N+1) * sizeof(*new_pqueue->q));
     
     return new_pqueue;
 }
 
-void pqconstruct(PQueue pqueue, int last)
+void pq_construct(PQueue pqueue, int last)
 {
     build_maxheap(pqueue, last);
 }
 
-void pqinsert(PQueue pqueue, PQ_Item item)
+void pq_insert(PQueue pqueue, PQ_Item item)
 {
     int item_position = pqueue->last + 1; 
     if(item_position <= pqueue->size)
@@ -40,13 +40,13 @@ void pqinsert(PQueue pqueue, PQ_Item item)
     }
 }
 
-void pqreplace(PQueue pqueue, PQ_Item item)
+void pq_replace(PQueue pqueue, PQ_Item item)
 {
     pqueue->q[ROOT] = item;
     downheap(pqueue, ROOT, pqueue->last);
 }
 
-PQ_Item pqremove(PQueue pqueue)
+PQ_Item pq_remove(PQueue pqueue)
 {
     PQ_Item removed = pqueue->q[ROOT];
     int last = pqueue->last;
@@ -58,25 +58,30 @@ PQ_Item pqremove(PQueue pqueue)
     return removed;
 }
 
-void pqsort(PQueue pqueue, int last)
+void pq_sort(PQueue pqueue, int last)
 {
     heapsort(pqueue, last);
 }
 
-int pqempty(PQueue pqueue)
+int pq_empty(PQueue pqueue)
 {
     if(pqueue->last == 0) return 1;
     return 0;
 }
 
-int pqsize(PQueue pqueue)
+int pq_size(PQueue pqueue)
 {
     return pqueue->size;
 }
 
-int pqnelements(PQueue pqueue)
+int pq_nelements(PQueue pqueue)
 {
     return pqueue->last;
+}
+
+PQ_Item pq_get(PQueue pqueue, int pos)
+{
+    return pqueue->q[pos];
 }
 
 /*
