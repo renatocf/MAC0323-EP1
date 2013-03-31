@@ -3,7 +3,7 @@
 
 /* Bibliotecas */
 #include "edge.h"
-#include "krustal.h"
+#include "kruskal.h"
 #include "ipqueue-internal.h"
 #include "pltree-internal.h"
 
@@ -24,7 +24,7 @@ static int index(PL_Item vector, PL_Item element)
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-void krustal(KRlist krlist, int V, int E, void (*edgefound)(KRlist,int))
+void kruskal(KRlist krlist, int V, int E, void (*edgefound)(KRlist,int))
 {   
     PL_Item vertices; int index_v1, index_v2;
     int r_pos; Edge removed; /* Aresta removida */

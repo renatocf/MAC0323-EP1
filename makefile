@@ -1,38 +1,37 @@
 # SOURCE ###############################################################
-SRC = queue.c main.c getopt.c Point.c
-OBJ = $(patsubst %.c,obj/%.o,$(SRC))
+SRC := main.c queue.c getopt.c Point.c
+OBJ = $(patsubst %.c,$(ODIR)/%.o,$(SRC))
+DIR := $(patsubst %.c,%.dir,$(SRC))
 
 # PROGRAMS #############################################################
-CC = gcc
-RM = rm -f
+CC := gcc
+RM := rm -f
+MKDIR := mkdir -p
 
 # DIRECTORIES ##########################################################
-VPATH = queue
-CLIBS = -Iqueue
-LDLIBS = -L. 
-BIN = bin
+VPATH := queue:getopt:Point
+BDIR := bin
+ODIR := obj
 
-# FLAGS ################################################################
-CFLAGS = -g -ansi -Wall -pedantic -O2
-LDFLAGS = -lm
+# LINKER ###############################################################
+LDLIBS := -L. 
+LDFLAGS := -lm
 
-# TARGETS ##############################################################
+# MONTAGEM DO PROGRAMA #################################################
+conectivity: $(OBJ) | $(DIR) $(ODIR) $(BDIR)
+	$(CC) $^ -o $(BDIR)/$@ $(LDLIBS) $(LDFLAGS)
 
-# all:
-# 	echo $(SRC)
-# 	echo $(OBJ)
+%.dir:
+	@ $(MAKE) -C $* --no-print-directory
 
-conectivity: $(OBJ)
-	$(CC) $^ -o $(BIN)/$@ $(LDFLAGS)
+$(BDIR):
+	@ echo Criando diretório de binários "$(ODIR)"
+	$(MKDIR) $@
 
-$(OBJ): | obj
+$(ODIR):
+	@ echo Criando diretório de objetos "$(ODIR)"
+	$(MKDIR) $@
 
-obj:
-	echo $(OBJ)
-	mkdir -p $@
-
-obj/%.o: %.c
-	$(CC) $(CFLAGS) $(CLIBS) -c $^ -o $@
-
+# OUTRAS OPÇÕES ########################################################
 clean:
-	$(RM) obj/*.o
+	$(RM) $(ODIR)/*.o

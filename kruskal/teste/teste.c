@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include "Point.h"
-#include "krustal.h"
+#include "kruskal.h"
 #include "pltree-internal.h"
 #include "ipqueue-internal.h"
 
@@ -29,7 +29,7 @@ int main()
     for(i = 1; i <= 3; i++)
         printf("%g\n", krlist_get_w(teste, i));
     
-    krustal(teste, N_VERTICES, N_EDGES, edgefound);
+    kruskal(teste, N_VERTICES, N_EDGES, edgefound);
     printf("connectivity: %g\n", max_w);
     
     return 0;
