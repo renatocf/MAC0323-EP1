@@ -3,9 +3,12 @@
 
 /* Bibliotecas */
 #include "edge.h"
+#include "pltree.h"
+#include "ipqueue.h"
 #include "kruskal.h"
-#include "ipqueue-internal.h"
-#include "pltree-internal.h"
+
+/* #include "ipqueue-internal.h" */
+/* #include "pltree-internal.h" */
 
 /* Estrutura krList */
 struct krList {
@@ -13,7 +16,7 @@ struct krList {
     IPQueue edges;
 };
 
-/* Função auxiliar para restagar índice de vetor: */
+/* Função auxiliar para resgatar índice de vetor: */
 static int index(PL_Item vector, PL_Item element) 
     { return vector - element; }
 
@@ -29,27 +32,27 @@ void kruskal(KRlist krlist, int V, int E, void (*edgefound)(KRlist,int))
     PL_Item vertices; int index_v1, index_v2;
     int r_pos; Edge removed; /* Aresta removida */
     int i = 0; /* Auxiliar para número de arestas removidas */
-    int j;
+    /* int j; */
     
     /* Inicializa parent link tree para vértices
      * e indirect priority queue para as arestas */
-    printf("\nfind_init:\n");
+    /* printf("\nfind_init:\n"); */
     find_init(krlist->vertices, V);
-    for(j = 0; j < V; j++)
-        printf("%d: %g %g\n", j, krlist->vertices->plt[j].x, krlist->vertices->plt[j].y);
-    printf("Dad vector: ");
-    for(j = 0; j < V; j++)
-        printf("%d ", krlist->vertices->dad[j]);
-    printf("\n");
+    /* for(j = 0; j < V; j++) */
+        /* printf("%d: %g %g\n", j, krlist->vertices->plt[j].x, krlist->vertices->plt[j].y); */
+    /* printf("Dad vector: "); */
+    /* for(j = 0; j < V; j++) */
+        /* printf("%d ", krlist->vertices->dad[j]); */
+    /* printf("\n"); */
     
-    printf("\nipq_construct:\n");
+    /* printf("\nipq_construct:\n"); */
     ipq_construct(krlist->edges, E);
-    for(j = 1; j <= E; j++)
-        printf("%g ", krlist->edges->a[j].w);
-    printf("\n");
-    for(j = 1; j <= E; j++)
-        printf("%d ", krlist->edges->p[j]);
-    printf("\n");
+    /* for(j = 1; j <= E; j++) */
+        /* printf("%g ", krlist->edges->a[j].w); */
+    /* printf("\n"); */
+    /* for(j = 1; j <= E; j++) */
+        /* printf("%d ", krlist->edges->p[j]); */
+    /* printf("\n"); */
     
     /* Ponteiro para lista de vértices */
     vertices = pltree_list(krlist->vertices);
@@ -60,7 +63,7 @@ void kruskal(KRlist krlist, int V, int E, void (*edgefound)(KRlist,int))
      * rém, o grafo não é conexo. Quando uma aresta é 
      * encontrada, realiza a ação da função passada 
      * como parâmetro "edgefound". */
-    printf("iiiiiiiiiii: %d\n", i);
+    /* printf("iiiiiiiiiii: %d\n", i); */
     while(!ipq_empty(krlist->edges))
     {
         r_pos = ipq_remove(krlist->edges);
@@ -71,24 +74,24 @@ void kruskal(KRlist krlist, int V, int E, void (*edgefound)(KRlist,int))
         
         if(union_find(krlist->vertices, index_v1, index_v2, JOIN)) 
             { edgefound(krlist, r_pos); i++; }
-        printf("i:%d V:%d\n", i, V);
+        /* printf("i:%d V:%d\n", i, V); */
         
         /* Debug */
-        printf("\nVertices:\n");
-        for(j = 0; j < V; j++)
-            printf("%d: %g %g\n", j, krlist->vertices->plt[j].x, krlist->vertices->plt[j].y);
-        printf("Dad vector: ");
-        for(j = 0; j < V; j++)
-            printf("%d ", krlist->vertices->dad[j]);
-        printf("\n");
-        
-        printf("\nEdges:\n");
-        for(j = 1; j <= E; j++)
-            printf("%g ", krlist->edges->a[j].w);
-        printf("\n");
-        for(j = 1; j <= E; j++)
-            printf("%d ", krlist->edges->p[j]);
-        printf("\n");
+        /* printf("\nVertices:\n"); */
+        /* for(j = 0; j < V; j++) */
+            /* printf("%d: %g %g\n", j, krlist->vertices->plt[j].x, krlist->vertices->plt[j].y); */
+        /* printf("Dad vector: "); */
+        /* for(j = 0; j < V; j++) */
+            /* printf("%d ", krlist->vertices->dad[j]); */
+        /* printf("\n"); */
+        /*  */
+        /* printf("\nEdges:\n"); */
+        /* for(j = 1; j <= E; j++) */
+            /* printf("%g ", krlist->edges->a[j].w); */
+        /* printf("\n"); */
+        /* for(j = 1; j <= E; j++) */
+            /* printf("%d ", krlist->edges->p[j]); */
+        /* printf("\n"); */
         /* Debug */
         
         if(i == V-1) { printf("BREAK\n"); break; }

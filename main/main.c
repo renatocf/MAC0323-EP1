@@ -6,6 +6,9 @@
 #include "queue.h"
 #include "Point.h"
 
+#include "grid.h"
+#include "kruskal.h"
+
 typedef struct options {
     int N;   /* Número de pontos */
     int M;   /* Número de testes */
@@ -161,43 +164,147 @@ float calc_normalized_critical_density(point *Points, int N, int M, int verb_mod
 
 int check_connectivity(point *Points, int N, float d, int verb_mode)
 {
-    Queue border;
-    char *connected;
-    int i, calc, n_con = 0, q_size = 0;
-    point query;
+    Grid teste;
+    point *p = Points;
+    /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
+    Grid_p *aux, *q, *aux1, *aux2;
+    int i, j, k, l, n_squares, count = 0, scount = 0;
     
-    connected = (char *) malloc(N * sizeof(*connected));
-    border = queueInit();
+    teste = grid_init(d, 1, N, NO_M);
+    grid_construct(teste, p, N, 1);
     
-    queuePut(border, Points[0]);
-    connected[0] = 1;
-    q_size = 1;
-    
-    while(!queueEmpty(border))
-    {
-        query = queueGet(border); calc = 0; q_size--;
-        for(i = 0; i < N; i++)
+    n_squares = get_grid_n_squares(teste);
+   
+    for(i = 0; i < n_squares; i++)
+        for(j = 0; j < n_squares; j++) 
         {
-            if(connected[i] == 1) {
-                continue;/* CUIDADO COM O LIXO! */
-            }
-            calc = 1;
-            if(distance(query, Points[i]) < d)
+            printf("%d %d: ", i, j);
+            /* aux = teste->g[i][j]; */
+            /* if(aux == NULL) printf("problem!"); */
+            
+            for(aux = get_grid_square(teste, i, j); 
+                    aux != NULL; aux = aux->next) 
             {
-                /* printf("Mais um conexo!\n"); */
-                n_con++;
-                queuePut(border, Points[i]); q_size++;
-                connected[i] = 1;
+                for(aux1 = aux->next; aux1 != NULL; aux1 = aux1->next)
+                    if(distance(aux->p, aux1->p) < d) count++;
+                printf("count: %d\n", count);
+                for(k = i-1; k <= i+1; k++)
+                {
+                    if(k < 0) continue; if(k > n_squares) break;
+                    for(l = j-1; l <= j+1; l++)
+                    {
+                        if(l < 0) continue; if(l > n_squares) break;
+                        for(aux1 = get_grid_square(teste, k, l), q = aux1;
+                            aux1 != NULL; q = aux1, aux1 = aux1->next) {
+                            scount = 0;
+                            /* printf("get point x:%f y:%f", aux1->p.x,  */
+                                    /* aux1->p.y); */
+                            if(distance(aux->p, aux1->p) < d) 
+                            {
+                                scount++; 
+                                q->next = aux1->next; aux1 = q;
+                                printf("Retirando pontos:\n");
+                                for(aux2 = aux; aux2 != NULL;
+                                        aux2 = aux2->next)
+                                    printf("p: %f %f\n", aux2->p.x,
+                                            aux2->p.y);
+                                printf("\n");
+                            }
+                            if(scount == 0) 
+                            {
+                                printf("count: %d\n", count);  
+                                return EXIT_FAILURE; 
+                            }
+                            else count += scount;
+                        }
+                    }
+                }
+                printf("entrou \n");
+                printf("x:%f y:%f\n", aux->p.x, aux->p.y);
             }
-            if(verb_mode) printf("q_size: %d n_con: %d\n", q_size, n_con);
+            printf("\n");
         }
-        if(calc == 0) return EXIT_SUCCESS;
-        /* if(n_con % 10 == 0) printf("rodada de 10\n"); */
-    }
     
-    queueFree(border); free(connected);
+    printf("count: %d\n", count);
+    
+    /* Grid p; int i, j, n_squares; int count; */
+    /* Grid_p *aux1, *aux2; */
+    /*  */
+    /* p = grid_init(d, 1, N, NO_M); */
+    /* grid_construct(p, Points, N, 1); */
+    /*  */
+    /* #<{(| Número de quadrados do grid |)}># */
+    /* n_squares = get_grid_n_squares(p); */
+    /*  */
+    /* for(i = 0; i < n_squares; i++) */
+    /*     for(j = 0; j < n_squares; j++) */
+    /*         printf("[%d][%d]:", i, j); */
+    /*         for(aux1 = get_grid_square(p, i, j); aux1 != NULL; aux1 = aux1->next) */
+    /*             printf("[%d][%d] x:%f y:%f\n", i, j, aux1->p.x, aux1->p.y); */
+    /*         pr */
+    
+    /* for(i = 0; i < n_squares; i++) */
+    /*     for(j = 0; j < n_squares; j++) */
+    /*     { */
+    /*         for(aux1 = get_grid_square(p, i, j);  */
+    /*             aux1 != NULL; aux1 = aux1->next) */
+    /*         { */
+    /*             printf("point[%d][%d] %f %f", i, j, aux1->p.x, */
+    /*                     aux1->p.y); */
+    /*             for(aux2 = aux1->next; aux2 != NULL; aux2 = aux2->next) */
+    /*                 if(distance(aux1->p, aux2->p) < d) count++; */
+                /* if((i+1) != get_grid_n_squares(p)) */
+                /*     for(aux2 = get_grid_square(p, i+1, j); aux2 != NULL; aux2 = aux2->next) */
+                /*         if(distance(aux1->p, aux2->p) < d) count++; */
+                /* if((j+1) != get_grid_n_squares(p)) */
+                /*     for(aux2 = get_grid_square(p, i, j+1); aux2 != NULL; aux2 = aux2->next) */
+                /*         if(distance(aux1->p, aux2->p) < d) count++; */
+                /* if((i+1) != get_grid_n_squares(p)  */
+                /* && (j+1) != get_grid_n_squares(p)) */
+                /*     for(aux2 = get_grid_square(p, i+1, j+1); aux2 != NULL; aux2 = aux2->next) */
+                /*         if(distance(aux1->p, aux2->p) < d) count++; */
+        /*     } */
+        /*     if(count == N-1) return EXIT_SUCCESS; */
+        /* } */
     
     return EXIT_FAILURE;
+    /* Queue border; */
+    /* char *connected; */
+    /* int i, calc, n_con = 0, q_size = 0; */
+    /* point query; */
+    /*  */
+    /* connected = (char *) malloc(N * sizeof(*connected)); */
+    /* border = queueInit(); */
+    /*  */
+    /* queuePut(border, Points[0]); */
+    /* connected[0] = 1; */
+    /* q_size = 1; */
+    /*  */
+    /* while(!queueEmpty(border)) */
+    /* { */
+    /*     query = queueGet(border); calc = 0; q_size--; */
+    /*     for(i = 0; i < N; i++) */
+    /*     { */
+    /*         if(connected[i] == 1) { */
+    /*             continue;#<{(| CUIDADO COM O LIXO! |)}># */
+    /*         } */
+    /*         calc = 1; */
+    /*         if(distance(query, Points[i]) < d) */
+    /*         { */
+    /*             #<{(| printf("Mais um conexo!\n"); |)}># */
+    /*             n_con++; */
+    /*             queuePut(border, Points[i]); q_size++; */
+    /*             connected[i] = 1; */
+    /*         } */
+    /*         if(verb_mode) printf("q_size: %d n_con: %d\n", q_size, n_con); */
+    /*     } */
+    /*     if(calc == 0) return EXIT_SUCCESS; */
+    /*     #<{(| if(n_con % 10 == 0) printf("rodada de 10\n"); |)}># */
+    /* } */
+    /*  */
+    /* queueFree(border); free(connected); */
+    /*  */
+    /* return EXIT_FAILURE; */
 }
 
 int receive_arguments(int argc, char **argv, Options *args)

@@ -55,9 +55,9 @@ static void grid_insert(Grid grid, point p, float max)
     Grid_p *new; int G, X, Y; float d;
     new =  (Grid_p *) malloc(sizeof(*new));
     
-    printf("grid_insert 1\n");
+    /* printf("grid_insert 1\n"); */
     d = max/grid->n_squares; 
-    printf("d: %g\n", d);
+    /* printf("d: %g\n", d); */
     
     G = 1/d; X = p.x*G; Y = p.y*G;
     
@@ -80,8 +80,14 @@ Grid_p *get_grid_square(Grid grid, int i, int j)
     return grid->g[i][j];
 }
 
-point get_point(Grid_p *t)
-{
-    if(t != NULL) printf("t é NULL!\n");
-    return t->p;
-}
+/* point get_point(Grid_p *t) */
+/* { */
+/*     point aux = t->p; */
+/*     #<{(| if(t == NULL) return NULL; |)}># */
+/*     return aux; */
+/* } */
+/*  */
+/* float *get_point_x(Grid_p *t) */
+/* { */
+/*     if(t !=  */
+/* } */

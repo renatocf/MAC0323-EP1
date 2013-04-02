@@ -5,10 +5,6 @@
 
 /* Definição de struct grid_p */
 typedef struct grid_p *Link;
-struct grid_p {
-    point p;
-    Link next;
-};
 
 /* Definição de Grid: matriz de links para struct grud_p */
 struct grid {

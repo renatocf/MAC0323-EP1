@@ -10,6 +10,11 @@
 
 /* Objetos */
 typedef struct grid_p Grid_p;
+struct grid_p {
+    point p;
+    Grid_p *next;
+};
+
 typedef struct grid *Grid;
 
 /* Célula cabeça padrão para todo grid */
@@ -28,7 +33,7 @@ extern Grid_p head;
  */
 
 Grid    grid_init          (float d, float max, int N, int M);
-point   get_point          (Grid_p *t);
+/* point  *get_point          (Grid_p *t); */
 void    grid_construct     (Grid, point *, int N, float max);
 Grid_p *get_grid_square    (Grid, int i, int j);
 int     get_grid_n_squares (Grid);

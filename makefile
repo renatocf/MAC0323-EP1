@@ -1,5 +1,5 @@
 # SOURCE ###############################################################
-SRC := main.c queue.c getopt.c Point.c
+SRC := main.c queue.c getopt.c Point.c grid.c ipqueue.c pltree.c kruskal.c 
 OBJ = $(patsubst %.c,$(ODIR)/%.o,$(SRC))
 DIR := $(patsubst %.c,%.dir,$(SRC))
 
@@ -9,17 +9,19 @@ RM := rm -f
 MKDIR := mkdir -p
 
 # DIRECTORIES ##########################################################
-VPATH := queue:getopt:Point
 BDIR := bin
 ODIR := obj
+VPATH := $(BDIR):queue:getopt:Point:kruskal:grid
 
 # LINKER ###############################################################
 LDLIBS := -L. 
 LDFLAGS := -lm
 
 # MONTAGEM DO PROGRAMA #################################################
-conectivity: $(OBJ) | $(DIR) $(ODIR) $(BDIR)
+conectivity: $(OBJ) | $(BDIR)
 	$(CC) $^ -o $(BDIR)/$@ $(LDLIBS) $(LDFLAGS)
+
+$(OBJ): $(ODIR) | $(DIR)
 
 %.dir:
 	@ $(MAKE) -C $* --no-print-directory
@@ -30,7 +32,7 @@ $(BDIR):
 
 $(ODIR):
 	@ echo Criando diretório de objetos "$(ODIR)"
-	$(MKDIR) $@
+	-$(MKDIR) $@
 
 # OUTRAS OPÇÕES ########################################################
 clean:

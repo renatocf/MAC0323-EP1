@@ -6,7 +6,7 @@
 int main()
 {
     Grid teste;
-    point p[] = { {0,0}, {1,1}, {0.5,0.5}};
+    point p[] = { {0.1,0}, {1,1}, {0.5,0.5}};
     Grid_p *aux;
     int i, j;
     
