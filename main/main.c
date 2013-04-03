@@ -171,7 +171,7 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
     /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
     Grid_p *aux, *q, *aux1, *aux2;
     int i, j, k, l, n_squares, count = 0, scount = 0;
-    for(i = 0; i < N; i++)
+    if(verb_mode) for(i = 0; i < N; i++)
         printf("Points[%d]: %g %g\n", i, Points[i].x, Points[i].y);
     
     teste = grid_init(d, 1, N, NO_M);
@@ -206,9 +206,9 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
                                     distance(aux->p, aux1->p));
                             if(distance(aux->p, aux1->p) < d) 
                             {
-                                printf("scount before:%d\n", scount);
+                                if(verb_mode) printf("\tscount before:%d\n", scount);
                                 scount++; 
-                                printf("scount after:%d\n", scount);
+                                if(verb_mode) printf("\tscount after:%d\n", scount);
                                 if(verb_mode) printf("\tAchei um!\n");
                                 /* q->next = aux1->next; aux1 = q; */
                                 /* if(verb_mode) */

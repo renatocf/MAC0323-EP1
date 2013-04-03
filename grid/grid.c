@@ -63,7 +63,7 @@ static void grid_insert(Grid grid, point p, float max)
     d = max/(grid->n_squares - 0.5); 
     
     G = 1/d; X = p.x*G+1; Y = p.y*G+1;
-    printf("G: %d X:%d Y:%d\n", G, X, Y);
+    /* printf("G: %d X:%d Y:%d\n", G, X, Y); */
     
     /* Adiciona o ponto ao quadrado grid[p.x/d][p.y/d].
      * Usamos o auxiliar 'G' como forma de passar 'd'
