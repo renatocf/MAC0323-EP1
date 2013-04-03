@@ -1,5 +1,5 @@
 # SOURCE ###############################################################
-SRC := main.c queue.c getopt.c Point.c grid.c ipqueue.c pltree.c kruskal.c 
+SRC := queue.c getopt.c Point.c grid.c ipqueue.c pltree.c kruskal.c main.c 
 OBJ = $(patsubst %.c,$(ODIR)/%.o,$(SRC))
 DIR := $(patsubst %.c,%.dir,$(SRC))
 
