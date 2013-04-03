@@ -164,7 +164,7 @@ float calc_normalized_critical_density(point *Points, int N, int M, int verb_mod
 
 int check_connectivity(point *Points, int N, float d, int verb_mode)
 {
-    Grid teste;
+    Grid teste; Queue connected;
     point *p = Points;
     /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
     Grid_p *aux, *q, *aux1, *aux2;
@@ -172,6 +172,9 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
     
     teste = grid_init(d, 1, N, NO_M);
     grid_construct(teste, p, N, 1);
+    
+    connected = queueInit();
+    /* queuePut( */
     
     n_squares = get_grid_n_squares(teste);
     printf("n_squares: %d\n", n_squares);
