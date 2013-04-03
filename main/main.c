@@ -177,38 +177,27 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
     if(verb_mode) printf("n_squares: %d\n", n_squares);
     if(verb_mode) printf("---------------------------\n");
     
-    for(i = 1; i < n_squares-1; i++)
-    {
+    for(i = 1; i < n_squares-1; i++) {
         for(j = 1; j < n_squares-1; j++) 
         {
             if(verb_mode) printf("%d %d: ", i, j);
-            /* aux = teste->g[i][j]; */
-            /* if(aux == NULL) printf("problem!"); */
-            
             for(aux = get_grid_square(teste, i, j); 
                     aux != NULL; aux = aux->next) 
             {
                 if(verb_mode) printf("p.x:%g p.y:%g;\n ", 
                         aux->p.x, aux->p.y);
-            /*     printf("count: %d\n", count); */
                 for(k = i-1; k <= i+1; k++)
                 {
-                    /* if(k < 0 || k == i) continue;  */
-            /*         if(k > n_squares) break; */
                     if(verb_mode) printf("\tEntorno:\n");
                     for(l = j-1; l <= j+1; l++)
                     {
                         if(k == i && l == j) continue;
                         if(verb_mode) printf("\t%d %d:\n", k, l);
-            /*             if(l < 0 || l == j) continue;  */
-            /*             if(l > n_squares) break; */
                         for(aux1 = get_grid_square(teste, k, l), q = aux1;
                             aux1 != NULL; q = aux1, aux1 = aux1->next) {
                             if(verb_mode) printf("\tp.x:%g p.y:%g;\n ", 
                                     aux1->p.x, aux1->p.y);
                             scount = 0;
-            /*                 printf("get point x:%f y:%f", aux1->p.x,  */
-            /*                         aux1->p.y); */
                             if(distance(aux->p, aux1->p) < d) 
                             {
                                 if(verb_mode) printf("\tAchei um!\n");
@@ -239,9 +228,6 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
                         count++;
                         if(verb_mode) printf("Achei um dentro\n");
                     }
-            /*     printf("entrou \n"); */
-            /*     printf("x:%f y:%f\n", aux->p.x, aux->p.y); */
-            /*      */
             } /* Percorre grid square */
             if(verb_mode) printf("\n");
         } /* Percorre grid */
