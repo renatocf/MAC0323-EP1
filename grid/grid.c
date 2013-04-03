@@ -23,11 +23,13 @@ Grid grid_init(float d, float max, int N, int M)
     }
     
     /* Número de quadrados de largura */
-    n_squares = max/d; n_squares += 2;
+    n_squares = (int) (max/d + 0.5); n_squares += 2;
+    printf("max/d: %g\n", (max/d));
     
     /* Alocação do grid */
     new = (Grid) malloc(sizeof(*new));
     new->n_squares = n_squares;
+    printf("n_squares: %d\n", n_squares-2);
     
     /* Alocação dinâmica para a matriz que compõe o grid */
     new->g = (Link **) malloc(n_squares * sizeof(*new->g));
@@ -35,7 +37,7 @@ Grid grid_init(float d, float max, int N, int M)
     for(i = 0; i < n_squares; i++)
         new->g[i] = (Link *) malloc(n_squares * sizeof(**new->g));
     
-    /* Associa a cada célula da matric do grid a 'cabeça'
+    /* Associa a cada célula da matrix do grid a 'cabeça'
      * como sendo a célula seguinte. */
     for(i = 0; i < n_squares; i++)
         for(j = 0; j < n_squares; j++)
@@ -47,7 +49,7 @@ Grid grid_init(float d, float max, int N, int M)
 void grid_construct(Grid grid, point *points, int N, float max)
 {
     int i = 0;
-    for(i = 0; i <= N; i++) grid_insert(grid, points[i], max);
+    for(i = 0; i < N; i++) grid_insert(grid, points[i], max);
 }
 
 static void grid_insert(Grid grid, point p, float max)
@@ -55,11 +57,13 @@ static void grid_insert(Grid grid, point p, float max)
     Grid_p *new; int G, X, Y; float d;
     new =  (Grid_p *) malloc(sizeof(*new));
     
+    /* printf("insert point.x: %g, point.y:%g\n", p.x, p.y); */
+    
     /* printf("grid_insert 1\n"); */
-    d = max/grid->n_squares; 
-    /* printf("d: %g\n", d); */
+    d = max/(grid->n_squares - 0.5); 
     
     G = 1/d; X = p.x*G+1; Y = p.y*G+1;
+    /* printf("G: %d X:%d Y:%d\n", G, X, Y); */
     
     /* Adiciona o ponto ao quadrado grid[p.x/d][p.y/d].
      * Usamos o auxiliar 'G' como forma de passar 'd'
