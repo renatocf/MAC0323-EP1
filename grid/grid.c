@@ -23,7 +23,7 @@ Grid grid_init(float d, float max, int N, int M)
     }
     
     /* Número de quadrados de largura */
-    n_squares = max/d;
+    n_squares = max/d; n_squares += 2;
     
     /* Alocação do grid */
     new = (Grid) malloc(sizeof(*new));
@@ -59,7 +59,7 @@ static void grid_insert(Grid grid, point p, float max)
     d = max/grid->n_squares; 
     /* printf("d: %g\n", d); */
     
-    G = 1/d; X = p.x*G; Y = p.y*G;
+    G = 1/d; X = p.x*G+1; Y = p.y*G+1;
     
     /* Adiciona o ponto ao quadrado grid[p.x/d][p.y/d].
      * Usamos o auxiliar 'G' como forma de passar 'd'
