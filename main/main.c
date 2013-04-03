@@ -119,47 +119,49 @@ int main(int argc, char **argv)
 
 float calc_normalized_critical_density(point *Points, int N, int M, int verb_mode)
 {
-    int i, j;
-    float dist = 0;
-    float smaller = 0;
-    int smaller_p = 0;
-    float largest = 0;
-    
-    for(i = 0; i < N; i++)
-    {
-        if(verb_mode) printf("\n");
-        dist = 0; smaller = sqrt(2);
-        for(j = i+1; j < N; j++)
-        {
-            dist = distance(Points[i], Points[j]);
-            if(verb_mode) printf("%g ", dist);
-            if(dist < smaller) 
-            {
-                smaller = dist;
-                smaller_p = j;
-            }
-        }
-        if(verb_mode) printf("\n");
-        if(verb_mode) printf("* smaller_p: %d\n", smaller_p);
-        if(verb_mode) printf("* smaller: %g\n", smaller);
-        if(verb_mode) printf("* largest: %g\n", largest);
-        for(j = i; j > 0; j--)
-        {
-            dist = distance(Points[smaller_p], Points[j]);
-            if(verb_mode) printf("%g ", dist);
-            if(dist < smaller)
-            {
-                smaller = dist;
-                smaller_p = j;
-            }
-        }
-        if(verb_mode) printf("\n");
-        if(verb_mode) printf("* smaller_p: %d\n", smaller_p);
-        if(verb_mode) printf("* smaller: %g\n", smaller);
-        if(verb_mode) printf("* largest: %g\n", largest);
-        if(smaller > largest) largest = smaller;
-    }
-    return largest;
+    /* KRlist edges = krlist_init(); */
+    /* int i, j; */
+    /* float dist = 0; */
+    /* float smaller = 0; */
+    /* int smaller_p = 0; */
+    /* float largest = 0; */
+    /*  */
+    /* for(i = 0; i < N; i++) */
+    /* { */
+    /*     if(verb_mode) printf("\n"); */
+    /*     dist = 0; smaller = sqrt(2); */
+    /*     for(j = i+1; j < N; j++) */
+    /*     { */
+    /*         dist = distance(Points[i], Points[j]); */
+    /*         if(verb_mode) printf("%g ", dist); */
+    /*         if(dist < smaller)  */
+    /*         { */
+    /*             smaller = dist; */
+    /*             smaller_p = j; */
+    /*         } */
+    /*     } */
+    /*     if(verb_mode) printf("\n"); */
+    /*     if(verb_mode) printf("* smaller_p: %d\n", smaller_p); */
+    /*     if(verb_mode) printf("* smaller: %g\n", smaller); */
+    /*     if(verb_mode) printf("* largest: %g\n", largest); */
+    /*     for(j = i; j > 0; j--) */
+    /*     { */
+    /*         dist = distance(Points[smaller_p], Points[j]); */
+    /*         if(verb_mode) printf("%g ", dist); */
+    /*         if(dist < smaller) */
+    /*         { */
+    /*             smaller = dist; */
+    /*             smaller_p = j; */
+    /*         } */
+    /*     } */
+    /*     if(verb_mode) printf("\n"); */
+    /*     if(verb_mode) printf("* smaller_p: %d\n", smaller_p); */
+    /*     if(verb_mode) printf("* smaller: %g\n", smaller); */
+    /*     if(verb_mode) printf("* largest: %g\n", largest); */
+    /*     if(smaller > largest) largest = smaller; */
+    /* } */
+    /* return largest; */
+    return 0;
 }
 
 int check_connectivity(point *Points, int N, float d, int verb_mode)
@@ -169,6 +171,8 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
     /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
     Grid_p *aux, *q, *aux1, *aux2;
     int i, j, k, l, n_squares, count = 0, scount = 0;
+    for(i = 0; i < N; i++)
+        printf("Points[%d]: %g %g\n", i, Points[i].x, Points[i].y);
     
     teste = grid_init(d, 1, N, NO_M);
     grid_construct(teste, p, N, 1);
@@ -184,6 +188,7 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
             for(aux = get_grid_square(teste, i, j); 
                     aux != NULL; aux = aux->next) 
             {
+                scount = 0;
                 if(verb_mode) printf("p.x:%g p.y:%g;\n ", 
                         aux->p.x, aux->p.y);
                 for(k = i-1; k <= i+1; k++)
@@ -197,31 +202,37 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
                             aux1 != NULL; q = aux1, aux1 = aux1->next) {
                             if(verb_mode) printf("\tp.x:%g p.y:%g;\n ", 
                                     aux1->p.x, aux1->p.y);
-                            scount = 0;
+                            if(verb_mode) printf("\tdist: %g\n", 
+                                    distance(aux->p, aux1->p));
                             if(distance(aux->p, aux1->p) < d) 
                             {
-                                if(verb_mode) printf("\tAchei um!\n");
+                                printf("scount before:%d\n", scount);
                                 scount++; 
-                                q->next = aux1->next; aux1 = q;
-                                if(verb_mode)
-                                    printf("\tRetirando pontos:\n");
-                                for(aux2 = aux; aux2 != NULL;
-                                        aux2 = aux2->next)
-                                    if(verb_mode) 
-                                        printf("\tp: %f %f\n", 
-                                        aux2->p.x, aux2->p.y);
-                                if(verb_mode) printf("\n");
+                                printf("scount after:%d\n", scount);
+                                if(verb_mode) printf("\tAchei um!\n");
+                                /* q->next = aux1->next; aux1 = q; */
+                                /* if(verb_mode) */
+                                    /* printf("\tRetirando pontos:\n"); */
+                                /* for(aux2 = aux1; aux2 != NULL; */
+                                        /* aux2 = aux2->next) */
+                                    /* if(verb_mode)  */
+                                        /* printf("\tp: %f %f\n",  */
+                                        /* aux2->p.x, aux2->p.y); */
+                                /* if(verb_mode) printf("\n"); */
                             }
-                            if(scount == 0) 
-                            {
-                                if(verb_mode) 
-                                    printf("count: %d\n", count);  
-                                return EXIT_FAILURE; 
-                            }
-                            else count += scount;
                         } /* Entorno do grid */
                     } /* Percorre entorno do grid */
                 }
+                if(/* n_squares != 3 && */ scount == 0) 
+                {
+                    if(verb_mode)
+                    {
+                        printf("scount:%d\n", scount); 
+                        printf("count: %d\n", count);  
+                    }
+                    return EXIT_FAILURE; 
+                }
+                else count += scount;
                 for(aux1 = aux->next; aux1 != NULL; aux1 = aux1->next)
                     if(distance(aux->p, aux1->p) < d) 
                     {
@@ -230,11 +241,11 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
                     }
             } /* Percorre grid square */
             if(verb_mode) printf("\n");
+            if(verb_mode) printf("count: %d\n", count);
+            if(count >= N-1) return EXIT_SUCCESS;
         } /* Percorre grid */
     }
     
-    if(verb_mode) printf("count: %d\n", count);
-    if(count == N-1) return EXIT_SUCCESS;
     
     /* Grid p; int i, j, n_squares; int count; */
     /* Grid_p *aux1, *aux2; */
