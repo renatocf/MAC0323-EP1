@@ -102,10 +102,10 @@ KRlist krlist_init(PL_Item vertices, int E)
 {
     KRlist new = (KRlist) malloc(sizeof(*new));
     
-    /* Inicializa lista de prioridades para os vértices: */
+    /* Inicializa parent link tree para as arestas */
     new->vertices = pltree_init(vertices);
     
-    /* Inicializa parent link tree para os vértices */
+    /* Inicializa lista de prioridades para os vértices: */
     new->edges = ipq_init(E);
     return new;
 }

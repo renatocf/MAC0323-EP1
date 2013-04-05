@@ -28,6 +28,23 @@ IPQueue ipq_init(int N)
     return new_ipqueue;
 }
 
+IPQueue ipq_build(IPQ_Item *items, int size)
+{
+    IPQueue new_ipqueue;
+    new_ipqueue = (IPQueue) malloc(sizeof(*new_ipqueue));
+    
+    /* Inicializa nova priority queue com N+1 elementos,
+     * tamanho 'N' e última posição preenchida como '0' */
+    new_ipqueue->last = new_ipqueue->size = size;
+    new_ipqueue->a = items;
+    
+    /* Inicializa vetores de posição */
+    new_ipqueue->p = (int *) malloc(size * sizeof(*new_ipqueue->p));
+    new_ipqueue->q = (int *) malloc(size * sizeof(*new_ipqueue->q));
+    
+    return new_ipqueue;
+}
+
 void ipq_construct(IPQueue ipqueue, int last)
 {
     int k; /* Auxiliar para inicializar 'p' e 'q' */
@@ -39,12 +56,16 @@ void ipq_construct(IPQueue ipqueue, int last)
 void ipq_insert(IPQueue ipqueue, IPQ_Item item)
 {
     int item_position = ipqueue->last + 1; 
-    if(item_position <= ipqueue->size)
-    {
+    
+    if(item_position >= ipqueue->size) 
+        ipqueue->a = resize(ipqueue);
+    
+    /* if(item_position <= ipqueue->size) */
+    /* { */
         ipqueue->a[item_position] = item;
         ipqueue->last = item_position;
         uphead(ipqueue, item_position);
-    }
+    /* } */
 }
 
 void ipq_replace(IPQueue ipqueue, IPQ_Item item)
@@ -108,6 +129,17 @@ IPQ_Item ipq_get(IPQueue ipqueue, int pos)
 -----------------------------------------------------------------------
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
+static IPQ_Item *resize(IPQueue ipqueue)
+{
+    IPQ_Item *bigger; int i, resize = 2*ipqueue->size;
+    bigger = (IPQ_Item *) malloc(resize * sizeof(*bigger));
+    
+    for(i = 0; i < ipqueue->size; i++)
+        bigger[i] = ipqueue->a[i];
+    
+    return bigger;
+}
+
 static void uphead(IPQueue ipqueue, int k)
 {
     /* IPQ_Item aux = ipqueue->a[k]; */

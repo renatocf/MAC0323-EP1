@@ -3,7 +3,7 @@
 #include<math.h>
 
 #include "getopt.h"
-#include "queue.h"
+#include "queue-internal.h"
 #include "Point.h"
 
 #include "grid.h"
@@ -119,6 +119,59 @@ int main(int argc, char **argv)
 
 float calc_normalized_critical_density(point *Points, int N, int M, int verb_mode)
 {
+    Grid teste; float lg;
+    point *p = Points;
+    /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
+    Grid_p *aux, *aux1;
+    int i, j, k, l, n_squares, count = 0;
+    
+    Queue edges = queueInit();
+    
+    if(verb_mode) for(i = 0; i < N; i++)
+        printf("Points[%d]: %g %g\n", i, Points[i].x, Points[i].y);
+    
+    lg = log((1.0*N)/2)/log(2);
+    teste = grid_init(NO_D, 1, N, lg);
+    grid_construct(teste, p, N, 1);
+    
+    n_squares = get_grid_n_squares(teste);
+    if(verb_mode) printf("n_squares: %d\n", n_squares);
+    if(verb_mode) printf("---------------------------\n");
+    
+    for(i = 1; i < n_squares-1; i++) {
+        for(j = 1; j < n_squares-1; j++) 
+        {
+            if(verb_mode) printf("%d %d: ", i, j);
+            for(aux = get_grid_square(teste, i, j); 
+                    aux != NULL; aux = aux->next) 
+            {
+                if(verb_mode) printf("p.x:%g p.y:%g;\n ", 
+                        aux->p.x, aux->p.y);
+                for(k = i-1; k <= i+1; k++)
+                {
+                    if(verb_mode) printf("\tEntorno:\n");
+                    for(l = j-1; l <= j+1; l++)
+                    {
+                        if(k == i && l == j) continue;
+                        if(verb_mode) printf("\t%d %d:\n", k, l);
+                        for(aux1 = get_grid_square(teste, k, l);
+                            aux1 != NULL; aux1 = aux1->next) 
+                        {
+                            if(verb_mode) printf("\tp.x:%g p.y:%g;\n ", 
+                                    aux1->p.x, aux1->p.y);
+                            if(verb_mode) printf("\tdist: %g\n", 
+                                    distance(aux->p, aux1->p));
+                        } /* Entorno do grid */
+                    } /* Percorre entorno do grid */
+                }
+                for(aux1 = aux->next; aux1 != NULL; aux1 = aux1->next);
+            } /* Percorre grid square */
+            if(verb_mode) printf("\n");
+            if(verb_mode) printf("count: %d\n", count);
+            
+        } /* Percorre grid */
+    }
+    
     /* KRlist edges = krlist_init(); */
     /* int i, j; */
     /* float dist = 0; */
@@ -167,10 +220,11 @@ float calc_normalized_critical_density(point *Points, int N, int M, int verb_mod
 int check_connectivity(point *Points, int N, float d, int verb_mode)
 {
     Grid teste; Queue connected;
-    point *p = Points;
+    point *p = Points, now;
     /* point p[] = {{0.1,0.1},{0.2,0.2}}; */
     Grid_p *aux, *q, *aux1, *aux2;
     int i, j, k, l, n_squares, count = 0, scount = 0;
+    int G, X, Y; struct node *aa;
     if(verb_mode) for(i = 0; i < N; i++)
         printf("Points[%d]: %g %g\n", i, Points[i].x, Points[i].y);
     
@@ -178,76 +232,140 @@ int check_connectivity(point *Points, int N, float d, int verb_mode)
     grid_construct(teste, p, N, 1);
     
     connected = queueInit();
-    /* queuePut( */
     
-    n_squares = get_grid_n_squares(teste);
-    if(verb_mode) printf("n_squares: %d\n", n_squares);
-    if(verb_mode) printf("---------------------------\n");
-    
-    for(i = 1; i < n_squares-1; i++) {
-        for(j = 1; j < n_squares-1; j++) 
-        {
-            if(verb_mode) printf("%d %d: ", i, j);
-            for(aux = get_grid_square(teste, i, j); 
-                    aux != NULL; aux = aux->next) 
+    for(i = 1; i <= n_squares; i++)
+        for(j = 1; j <= n_squares; j++) 
+            if((aux = get_grid_square(teste, i, j)) != NULL)
             {
-                scount = 0;
-                if(verb_mode) printf("p.x:%g p.y:%g;\n ", 
-                        aux->p.x, aux->p.y);
-                for(k = i-1; k <= i+1; k++)
-                {
-                    if(verb_mode) printf("\tEntorno:\n");
-                    for(l = j-1; l <= j+1; l++)
-                    {
-                        if(k == i && l == j) continue;
-                        if(verb_mode) printf("\t%d %d:\n", k, l);
-                        for(aux1 = get_grid_square(teste, k, l), q = aux1;
-                            aux1 != NULL; q = aux1, aux1 = aux1->next) {
-                            if(verb_mode) printf("\tp.x:%g p.y:%g;\n ", 
-                                    aux1->p.x, aux1->p.y);
-                            if(verb_mode) printf("\tdist: %g\n", 
-                                    distance(aux->p, aux1->p));
-                            if(distance(aux->p, aux1->p) < d) 
-                            {
-                                if(verb_mode) printf("\tscount before:%d\n", scount);
-                                scount++; 
-                                if(verb_mode) printf("\tscount after:%d\n", scount);
-                                if(verb_mode) printf("\tAchei um!\n");
-                                /* q->next = aux1->next; aux1 = q; */
-                                /* if(verb_mode) */
-                                    /* printf("\tRetirando pontos:\n"); */
-                                /* for(aux2 = aux1; aux2 != NULL; */
-                                        /* aux2 = aux2->next) */
-                                    /* if(verb_mode)  */
-                                        /* printf("\tp: %f %f\n",  */
-                                        /* aux2->p.x, aux2->p.y); */
-                                /* if(verb_mode) printf("\n"); */
-                            }
-                        } /* Entorno do grid */
-                    } /* Percorre entorno do grid */
-                }
-                if(/* n_squares != 3 && */ scount == 0) 
-                {
-                    if(verb_mode)
-                    {
-                        printf("scount:%d\n", scount); 
-                        printf("count: %d\n", count);  
-                    }
-                    return EXIT_FAILURE; 
-                }
-                else count += scount;
-                for(aux1 = aux->next; aux1 != NULL; aux1 = aux1->next)
-                    if(distance(aux->p, aux1->p) < d) 
-                    {
-                        count++;
-                        if(verb_mode) printf("Achei um dentro\n");
-                    }
-            } /* Percorre grid square */
-            if(verb_mode) printf("\n");
-            if(verb_mode) printf("count: %d\n", count);
-            if(count >= N-1) return EXIT_SUCCESS;
-        } /* Percorre grid */
-    }
+                queuePut(connected, aux->p);
+                aux = aux->next;
+            }
+    /* queuePut(connected, p[0]); */
+    
+    /* for(aa = connected->end; aa != NULL; aa = aa->next) */
+    /*     printf("%g %g\n", aa->item.x, aa->item.y); */
+    /*  */
+    /* G = 1/d; */
+    /* while(!queueEmpty(connected)) */
+    /* { */
+    /*     now = queueGet(connected); */
+    /*     printf("%g %g\n", now.x, now.y); */
+    /*     X = now.x*G+1; Y = now.y*G+1; */
+    /*     printf("%d %d\n", X, Y); */
+    /*     for(aux = get_grid_square(teste, X, Y);  */
+    /*             aux != NULL; aux = aux->next)  */
+    /*     { */
+    /*         scount = 0; */
+    /*         if(verb_mode) printf("p.x:%g p.y:%g;\n ",  */
+    /*                 aux->p.x, aux->p.y); */
+    /*     } */
+    /* } */
+    /*         for(k = X-1; k <= X+1; k++) */
+    /*         { */
+    /*             if(verb_mode) printf("\tEntorno:\n"); */
+    /*             for(l = Y-1; l <= Y+1; l++) */
+    /*             { */
+    /*                 if(verb_mode) printf("\t%d %d:\n", k, l); */
+    /*                 for(aux1 = get_grid_square(teste, k, l), q = aux1; */
+    /*                     aux1 != NULL; q = aux1, aux1 = aux1->next) { */
+    /*                     if(verb_mode) printf("\tp.x:%g p.y:%g;\n ",  */
+    /*                             aux1->p.x, aux1->p.y); */
+    /*                     if(verb_mode) printf("\tdist: %g\n",  */
+    /*                             distance(aux->p, aux1->p)); */
+    /*                     if(distance(aux->p, aux1->p) < d)  */
+    /*                     { */
+    /*                         if(verb_mode) printf("\tscount before:%d\n", scount); */
+    /*                         scount++;  */
+    /*                         if(verb_mode) printf("\tscount after:%d\n", scount); */
+    /*                         if(verb_mode) printf("\tAchei um!\n"); */
+    /*                         queuePut(connected, aux1->p); */
+    /*                         q->next = aux1->next; aux1 = q; */
+    /*                     } */
+    /*                 } #<{(| Entorno do grid |)}># */
+    /*             } #<{(| Percorre entorno do grid |)}># */
+    /*         } */
+    /*         if(#<{(| n_squares != 3 && |)}># scount == 0)  */
+    /*         { */
+    /*             if(verb_mode) */
+    /*             { */
+    /*                 printf("scount:%d\n", scount);  */
+    /*                 printf("count: %d\n", count);   */
+    /*             } */
+    /*             return EXIT_FAILURE;  */
+    /*         } */
+    /*         else count += scount; */
+    /*     } #<{(| Percorre grid square |)}># */
+    /*     if(count == N-1) return EXIT_SUCCESS; */
+    /* } */
+    
+    /* n_squares = get_grid_n_squares(teste); */
+    /* if(verb_mode) printf("n_squares: %d\n", n_squares); */
+    /* if(verb_mode) printf("---------------------------\n"); */
+    /*  */
+    /* for(i = 1; i < n_squares-1; i++) { */
+    /*     for(j = 1; j < n_squares-1; j++)  */
+    /*     { */
+    /*         if(verb_mode) printf("%d %d: ", i, j); */
+    /*         for(aux = get_grid_square(teste, i, j);  */
+    /*                 aux != NULL; aux = aux->next)  */
+    /*         { */
+    /*             scount = 0; */
+    /*             if(verb_mode) printf("p.x:%g p.y:%g;\n ",  */
+    /*                     aux->p.x, aux->p.y); */
+    /*             for(k = i-1; k <= i+1; k++) */
+    /*             { */
+    /*                 if(verb_mode) printf("\tEntorno:\n"); */
+    /*                 for(l = j-1; l <= j+1; l++) */
+    /*                 { */
+    /*                     if(k == i && l == j) continue; */
+    /*                     if(verb_mode) printf("\t%d %d:\n", k, l); */
+    /*                     for(aux1 = get_grid_square(teste, k, l), q = aux1; */
+    /*                         aux1 != NULL; q = aux1, aux1 = aux1->next) { */
+    /*                         if(verb_mode) printf("\tp.x:%g p.y:%g;\n ",  */
+    /*                                 aux1->p.x, aux1->p.y); */
+    /*                         if(verb_mode) printf("\tdist: %g\n",  */
+    /*                                 distance(aux->p, aux1->p)); */
+    /*                         if(distance(aux->p, aux1->p) < d)  */
+    /*                         { */
+    /*                             if(verb_mode) printf("\tscount before:%d\n", scount); */
+    /*                             scount++;  */
+    /*                             if(verb_mode) printf("\tscount after:%d\n", scount); */
+    /*                             if(verb_mode) printf("\tAchei um!\n"); */
+    /*                             #<{(| q->next = aux1->next; aux1 = q; |)}># */
+    /*                             #<{(| if(verb_mode) |)}># */
+    /*                                 #<{(| printf("\tRetirando pontos:\n"); |)}># */
+    /*                             #<{(| for(aux2 = aux1; aux2 != NULL; |)}># */
+    /*                                     #<{(| aux2 = aux2->next) |)}># */
+    /*                                 #<{(| if(verb_mode)  |)}># */
+    /*                                     #<{(| printf("\tp: %f %f\n",  |)}># */
+    /*                                     #<{(| aux2->p.x, aux2->p.y); |)}># */
+    /*                             #<{(| if(verb_mode) printf("\n"); |)}># */
+    /*                         } */
+    /*                     } #<{(| Entorno do grid |)}># */
+    /*                 } #<{(| Percorre entorno do grid |)}># */
+    /*             } */
+    /*             if(#<{(| n_squares != 3 && |)}># scount == 0)  */
+    /*             { */
+    /*                 if(verb_mode) */
+    /*                 { */
+    /*                     printf("scount:%d\n", scount);  */
+    /*                     printf("count: %d\n", count);   */
+    /*                 } */
+    /*                 return EXIT_FAILURE;  */
+    /*             } */
+    /*             else count += scount; */
+    /*             for(aux1 = aux->next; aux1 != NULL; aux1 = aux1->next) */
+    /*                 if(distance(aux->p, aux1->p) < d)  */
+    /*                 { */
+    /*                     count++; */
+    /*                     if(verb_mode) printf("Achei um dentro\n"); */
+    /*                 } */
+    /*         } #<{(| Percorre grid square |)}># */
+    /*         if(verb_mode) printf("\n"); */
+    /*         if(verb_mode) printf("count: %d\n", count); */
+    /*         if(count >= N-1) return EXIT_SUCCESS; */
+    /*     } #<{(| Percorre grid |)}># */
+    /* } */
     
     
     /* Grid p; int i, j, n_squares; int count; */

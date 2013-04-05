@@ -1,6 +1,6 @@
-CC = gcc
-CFLAGS = -ansi -Wall -pedantic -g -I.
-RM = rm -f
+CC := gcc
+CFLAGS := -ansi -Wall -pedantic -g -I.
+RM := rm -f
 
 VPATH = ../obj
 ODIR = ../obj

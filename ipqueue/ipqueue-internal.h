@@ -18,9 +18,10 @@ struct ipQueue {
 };
 
 /* Funções de uso interno */
-static void uphead        (IPQueue ipqueue, int k);
-static void downheap      (IPQueue ipqueue, int k, int last);
-static void build_maxheap (IPQueue ipqueue, int last);
-static void heapsort      (IPQueue ipqueue, int last);
+static void      uphead        (IPQueue ipqueue, int k);
+static void      downheap      (IPQueue ipqueue, int k, int last);
+static void      build_maxheap (IPQueue ipqueue, int last);
+static void      heapsort      (IPQueue ipqueue, int last);
+static IPQ_Item *resize        (IPQueue ipqueue);
 
 #endif
